@@ -1,25 +1,25 @@
-# Avangardum Convention
-This is the convention for my personal projects, covering various aspects of development
+# Avangardum's Convention
+This is the convention for my personal projects, covering various aspects of development.
 
 ## C#
 
 ### Naming
-| Object                                       | Naming           |
-|----------------------------------------------|------------------|
-| Type (class, struct, record, enum, delegate) | `SomeClass `     |
-| Interface                                    | `ISomeInterface` |
-| Public field                                 | `SomeField `     |
-| Non-public field                             | `_someField `    |
-| Property                                     | `SomeProperty `  |
-| Event                                        | `SomeEvent `     |
-| Method                                       | `SomeMethod  `   |
-| Method parameter                             | `someParameter ` |
-| Local variable                               | `someVariable `  |
-| Namespace                                    | `SomeNamespace ` |
-| Non-local Constant / static readonly field   | `SomeConstant `  |
-| Local constant                               | `someConstant`   |
-| Region                                       | `SomeRegion`     |
-| Goto label                                   | `SomeGotoLabel`  |
+| Object                                     | Naming           |
+|--------------------------------------------|------------------|
+| Namespace                                  | `SomeNamespace ` |
+| Class / struct / record / enum / delegate  | `SomeType`       |
+| Interface                                  | `ISomeInterface` |
+| Public field                               | `SomeField `     |
+| Non-public field                           | `_someField `    |
+| Non-local Constant / static readonly field | `SomeConstant `  |
+| Property                                   | `SomeProperty `  |
+| Event                                      | `SomeEvent `     |
+| Method                                     | `SomeMethod  `   |
+| Method parameter                           | `someParameter ` |
+| Local variable                             | `someVariable `  |
+| Local constant                             | `someConstant`   |
+| Region                                     | `SomeRegion`     |
+| Goto label                                 | `SomeGotoLabel`  |
 
 ### Comments
 
@@ -33,11 +33,12 @@ If `//` is not in the beginning of a line, it should also be preceded by a white
 
 ### Namespaces
 
-Root namespace for the project should follow the following pattern: *Developer*.*Project* (example: `Avangardum.TwilightRun`).
+Root namespace for the project should follow the following pattern: *Developer/Company*.*Project* 
+(examples: `Avangardum.TwilightRun`, `Hyperbox.DroneTanksArena`).
 
 ### Types
 
-Each source file should contain only one non-nested type.
+Each source code file should contain only one non-nested type.
 
 ### Enums
 
@@ -67,12 +68,38 @@ public enum Season
 
 ### Member declaration order
 
+- Nested types
+- Constants and static readonly fields
+- Fields
+- Constructors
+- Destructors
+- Events
+- Properties
+- Indexers
+- Methods
 
+Within each of these groups order by access:
+
+- public
+- internal
+- protected internal
+- protected
+- private
+
+Within each of the access groups, order by static, then non-static:
+
+- static
+- non-static
+
+Within each of the static/non-static groups of fields, order by readonly, then non-readonly:
+
+- readonly
+- non-readonly
 
 ### Events
 
 Events should use the `EventHandler` delegate. If there are no arguments to pass, `EventArgs.Empty` should be passed. 
-If there are arguments to pass, the generic version of EventHandler should be used and arguments should be passed 
+If there are arguments to pass, the generic version of `EventHandler` should be used and arguments should be passed 
 in an event arguments object.
 
 Event argument types should have the `EventArgs` suffix.
@@ -86,11 +113,11 @@ Events should not be initialized with an empty delegate.
 
 Events should be invoked using the `Invoke` method.
 
-Events should be invoked using the `.?` operator.
+Events should be invoked using the `?.` operator.
 
-Events that are invoked before something happens should be verbs in present continuous
+Events that are invoked before something happens should be named as verbs in present continuous.
 
-Events that are invoked after something happens should be verbs in past simple.
+Events that are invoked after something happens should be named as verbs in past simple.
 
 <details>
 <summary>Example</summary>
@@ -101,19 +128,18 @@ public class Character
 {
     public string Name { get; set; }
 
-    public event Action<Character> Death = delegate {};
+    public event Action<Character, Character> Death = delegate {};
     
     private void Die(Charater killer)
     {
-        Death(killer);
+        Death(this, killer);
     }
 }
 
 public class KillReporter()
 {
-    private void OnKill(object objVictim, Character killer)
+    private void OnKill(Character victim, Character killer)
     {
-        var victim = (Character)objVictim;
         _gameLogger.Write($"{killer.Name} killed {victim.Name}");
     }
 }
@@ -130,7 +156,7 @@ public class Character
     
     private void Die(Character killer)
     {
-        Died?.Invoke(new DiedEventArgs(killer));
+        Died?.Invoke(this, new DiedEventArgs(killer));
     }
 }
 
@@ -175,11 +201,25 @@ Binding ID naming: `SomeBinding`
 
 ## NUnit
 
+Use the constraint model for assertions. Exception: when asserting that an object, inheriting from UnityEngine.Object 
+is null or not null, use Assert.That(obj != null) instead.
 
+<details>
+<summary>Example</summary>
+
+```csharp
+// incorrect
+Assert.That(result != 0);
+Assert.AreNotEqual(0, result);
+
+// correct
+Assert.That(result, Is.Not.EqualTo(0));
+```
+</details>
 
 ## Git
 
-
+Branch naming: `some-branch`
 
 ## Miscellaneous
 
