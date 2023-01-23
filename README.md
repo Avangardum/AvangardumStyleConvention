@@ -199,10 +199,29 @@ All Unity objects (Game objects, Animator states, etc.) naming: `Some Object`
 
 Binding ID naming: `SomeBinding`
 
+Injection methods priority (from most recommended to least recommended):
+- Injection using constructor
+- Injection using an injection method
+- Injection using injectable fields/properties
+
+A class should have no more than one injection method.
+
+An injection method should be named `Inject`. If a class has a base class that has an injection method defined, 
+its own injection method should have the `C` prefix (`CInject`). Overriding injection methods or hiding them
+with the `new` keyword is not allowed.
+
 ## NUnit
 
-Use the constraint model for assertions. Exception: when asserting that an object, inheriting from UnityEngine.Object 
-is null or not null, use Assert.That(obj != null) instead.
+Use the constraint model for assertions where possible.
+
+When asserting that an object, inheriting from UnityEngine.Object, is null or not null, use `UnityEngine.Assertions.Assert`
+instead of `NUnit.Framework.Assert`. For this purpose use the following type alias: `using UAssert = UnityEngine.Assertions.Assert;`
+
+A test suite should have no more than one setup and teardown methods.
+
+Setup and teardown methods should be named `SetUp` and `TearDown`. If a fixture has a base class that has setup/teardown
+methods defined, its own setup/teardown methods should have the `C` prefix (`CSetUp`, `CTearDown`). 
+Overriding these methods or hiding them with the `new` keyword is not allowed.
 
 <details>
 <summary>Example</summary>
@@ -220,6 +239,8 @@ Assert.That(result, Is.Not.EqualTo(0));
 ## Git
 
 Branch naming: `some-branch`
+
+Main branch name: `main`
 
 ## Miscellaneous
 
