@@ -1,5 +1,27 @@
-# Avangardum's Convention
+# Avangardum's style convention
 This is the convention for my personal projects, covering various aspects of development.
+
+## Style convention versioning
+
+Current version: wip
+
+Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
+name, a used version and a link to a corresponding version branch of this repository, like this:
+
+```markdown
+Avangardum's style convention v1.0
+https://github.com/Avangardum/AvangardumStyleConvention/tree/v1.0
+```
+
+Any project specific rules should be written in this file.
+
+Version has the following format: major.minor[.patch]
+
+Major version is incremented when there are breaking changes.
+
+Minor version is incremented when there are non-breaking changes.
+
+Patch version is incremented when there are fixes that don't change the essence of the convention.
 
 ## C#
 
@@ -36,6 +58,8 @@ If `//` is not in the beginning of a line, it should also be preceded by a white
 
 Root namespace for the project should follow the following pattern: *Developer/Company*.*Project* 
 (examples: `Avangardum.TwilightRun`, `Hyperbox.DroneTanksArena`).
+
+Use file-scoped namespaces where possible.
 
 ### Types
 
@@ -82,9 +106,10 @@ public enum Season
 Within each of these groups order by access:
 
 - public
-- internal
 - protected internal
+- internal
 - protected
+- private protected
 - private
 
 Within each of the access groups, order by static, then non-static:
@@ -268,11 +293,15 @@ private void Foo(int value) // method
 
 ## Files
 
-File naming: `Some File`. The only exception are source code files, they should be named same as a type / module contained in them.
+| Object | Naming     |
+|--------|------------|
+| File   | `SomeFile` |
 
 ## Unity
 
-All Unity objects (Game objects, Animator states, etc.) naming: `Some Object`
+| Object                                                  | Naming       |
+|---------------------------------------------------------|--------------|
+| All Unity objects (Game objects, Animator states, etc.) | `SomeObject` |
 
 ## Zenject
 
@@ -285,8 +314,7 @@ Injection methods priority (from most recommended to least recommended):
 
 A class should have no more than one injection method.
 
-An injection method should be named `{ClassName}Inject`. Overriding injection methods or hiding them
-with the `new` keyword is not allowed.
+An injection method should be named `{ClassName}Inject`.
 
 ## NUnit
 
@@ -298,7 +326,6 @@ instead of `NUnit.Framework.Assert`. For this purpose use the following type ali
 A test suite should have no more than one setup and teardown methods.
 
 Setup and teardown methods should be named `{ClassName}SetUp` and `{ClassName}TearDown`. 
-Overriding these methods or hiding them with the `new` keyword is not allowed.
 
 <details>
 <summary>Example</summary>
