@@ -20,6 +20,7 @@ This is the convention for my personal projects, covering various aspects of dev
 | Local constant                             | `someConstant`   |
 | Region                                     | `SomeRegion`     |
 | Goto label                                 | `SomeGotoLabel`  |
+| Tuple / anonymous type member              | `SomeMember`     |
 
 ### Comments
 
@@ -126,9 +127,9 @@ Events that are invoked after something happens should be named as verbs in past
 // incorrect
 public class Character
 {
-    public string Name { get; set; }
-
     public event Action<Character, Character> Death = delegate {};
+
+    public string Name { get; set; }
     
     private void Die(Charater killer)
     {
@@ -150,9 +151,9 @@ public class Character
 {
     public record DiedEventArgs(Character killer);
 
-    public string Name { get; set; }
-
     public event EventHandler<DiedEventArgs> Died;
+
+    public string Name { get; set; }
     
     private void Die(Character killer)
     {
@@ -171,19 +172,97 @@ public class KillReporter()
 ```
 </details>
 
-### Miscellaneous
+### Formatting
 
-When comparing a value to with boundary values, all of the values should be sorted in ascending order from left to right.
+These rules are the recommended formatting. But if in any particular case other formatting is more readable, it can also
+be used.
+
+There should be no whitespace between a method name and its parameters.
+
+There should be a single whitespace between a loop or branching operator and its condition.
+
+There should be no newline between fields.
+
+There should be no newline between auto-properties or properties with a simple expression body getter.
+
+There should be a single newline between properties with a block or a complex expression body getter
+(and between them and simple expression body or auto-properties).
+
+There should be no newline between functions with a simple expression body.
+
+There should be a single newline between functions with a block or a complex expression body
+(and between them and simple expression body functions).
+
+There should be a single newline between different kinds of members (fields, properties, methods, etc.).
+
+An opening brace should be on a new line.
 
 <details>
 <summary>Example</summary>
 
 ```csharp
 // incorrect
-var isValid = value >= min && value <= max;
+private int _a;
+
+private int _b;
+public int C { get; set; }
+
+public int SqrC => A * A;
+public int GetCPlus (int n) => C + n;
+
+public int GetCMinus (int n) => C - n;
+public int GetFoo (int n) {
+    if(n > 0) return _a;
+    else return _b;
+}
+
 
 // correct
-var isValid = min <= value && value <= max;
+private int _a;
+private int _b;
+
+public int C { get; set; }
+public int SqrC => A * A;
+
+public int GetCPlus(int n) => C + n;
+public int GetCMinus(int n) => C - n;
+
+public int GetFoo(int n)
+{
+    if (n > 0) return _a;
+    else return _b;
+}
+```
+</details>
+
+### Miscellaneous
+
+When comparing a value to with boundary values, all of the values should be sorted in ascending order from left to right.
+
+Use var where possible.
+
+Use explicit privacy modifiers where possible.
+
+<details>
+<summary>Example</summary>
+
+```csharp
+// incorrect
+void Foo(int value) // method
+{
+    bool isValid = value >= MinValue && value <= MaxValue;
+    if (!isValid) return;
+    Bar();
+}
+
+
+// correct
+private void Foo(int value) // method
+{
+    var isValid = MinValue <= value && value <= MaxValue;
+    if (!isValid) return;
+    Bar();
+}
 ```
 </details>
 
@@ -206,8 +285,7 @@ Injection methods priority (from most recommended to least recommended):
 
 A class should have no more than one injection method.
 
-An injection method should be named `Inject`. If a class has a base class that has an injection method defined, 
-its own injection method should have the `C` prefix (`CInject`). Overriding injection methods or hiding them
+An injection method should be named `{ClassName}Inject`. Overriding injection methods or hiding them
 with the `new` keyword is not allowed.
 
 ## NUnit
@@ -219,8 +297,7 @@ instead of `NUnit.Framework.Assert`. For this purpose use the following type ali
 
 A test suite should have no more than one setup and teardown methods.
 
-Setup and teardown methods should be named `SetUp` and `TearDown`. If a fixture has a base class that has setup/teardown
-methods defined, its own setup/teardown methods should have the `C` prefix (`CSetUp`, `CTearDown`). 
+Setup and teardown methods should be named `{ClassName}SetUp` and `{ClassName}TearDown`. 
 Overriding these methods or hiding them with the `new` keyword is not allowed.
 
 <details>
@@ -238,9 +315,17 @@ Assert.That(result, Is.Not.EqualTo(0));
 
 ## Git
 
-Branch naming: `some-branch`
+| Object      | Naming           |
+|-------------|------------------|
+| Repository  | `SomeRepository` |
+| Branch      | `some-branch`    |
+| Main branch | `main`           |
 
-Main branch name: `main`
+## JSON
+
+| Object        | Naming         |
+|---------------|----------------|
+| Property name | `someProperty` |
 
 ## Miscellaneous
 
