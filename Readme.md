@@ -3,14 +3,14 @@ This is the convention for my personal projects, covering various aspects of dev
 
 ## Style convention versioning
 
-Current version: 1.0
+Current version: 1.0.1
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
 name, a used version and a link to a corresponding version branch of this repository, like this:
 
 ```markdown
 Avangardum's style convention v1.0
-https://github.com/Avangardum/AvangardumStyleConvention/tree/v1.0
+https://github.com/Avangardum/AvangardumStyleConvention/tree/version/1.0
 ```
 
 Any project specific rules should be written in this file.
