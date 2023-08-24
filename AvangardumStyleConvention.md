@@ -1,9 +1,10 @@
 # Avangardum's style convention
+
 This is the convention for my personal projects, covering various aspects of development.
 
 ## Style convention versioning
 
-Current version: 2.0
+Current version: wip
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
 name, a used version and a link to a corresponding version branch of this repository, like this:
