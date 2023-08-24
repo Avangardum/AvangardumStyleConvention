@@ -3,14 +3,22 @@ This is the convention for my personal projects, covering various aspects of dev
 
 ## Style convention versioning
 
-Current version: 1.0.1
+Current version: 2.0
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
 name, a used version and a link to a corresponding version branch of this repository, like this:
 
 ```markdown
-Avangardum's style convention v1.0
+This project uses Avangardum's style convention v1.0
 https://github.com/Avangardum/AvangardumStyleConvention/tree/version/1.0
+
+# Local rules (take precedence over the base convention)
+
+local rules
+
+# Avangardum's style convention v1.0
+
+this convention
 ```
 
 Any project specific rules should be written in this file.
@@ -26,23 +34,24 @@ Patch version is incremented when there are fixes that don't change the essence 
 ## C#
 
 ### Naming
-| Object                                     | Naming           |
-|--------------------------------------------|------------------|
-| Namespace                                  | `SomeNamespace ` |
-| Class / struct / record / enum / delegate  | `SomeType`       |
-| Interface                                  | `ISomeInterface` |
-| Public field                               | `SomeField `     |
-| Non-public field                           | `_someField `    |
-| Non-local Constant / static readonly field | `SomeConstant `  |
-| Property                                   | `SomeProperty `  |
-| Event                                      | `SomeEvent `     |
-| Method                                     | `SomeMethod  `   |
-| Method parameter                           | `someParameter ` |
-| Local variable                             | `someVariable `  |
-| Local constant                             | `someConstant`   |
-| Region                                     | `SomeRegion`     |
-| Goto label                                 | `SomeGotoLabel`  |
-| Tuple / anonymous type member              | `SomeMember`     |
+| Object                                     | Naming              |
+|--------------------------------------------|---------------------|
+| Namespace                                  | `SomeNamespace`     |
+| Non-interface type                         | `SomeType`          |
+| Interface                                  | `ISomeInterface`    |
+| Non-local constant / static readonly field | `SomeConstant`      |
+| Private field                              | `_someField`        |
+| Non-private field                          | `SomeField`         |
+| Event                                      | `SomeEvent`         |
+| Property                                   | `SomeProperty`      |
+| Synchronous function                       | `SomeFunction`      |
+| Asynchronous function                      | `SomeFunctionAsync` |
+| Function parameter                         | `someParameter`     |
+| Local variable                             | `someVariable`      |
+| Local constant                             | `someConstant`      |
+| Region                                     | `SomeRegion`        |
+| Goto label                                 | `SomeGotoLabel`     |
+| Tuple / anonymous type member              | `SomeMember`        |
 
 ### Comments
 
@@ -197,10 +206,44 @@ public class KillReporter()
 ```
 </details>
 
+### Methods, properties, indexers
+
+Do not use expression body declaration if it is more than one line long. Having a signature and an expression body on
+different lines is still acceptable.
+
+<details>
+<summary>Example</summary>
+
+```csharp
+// incorrect
+private List<User> GetTargetUsers() => users
+    .Where(u => MinTargetAge <= u.Age && u.Age <= MaxTargetAge)
+    .Where(u => u.IsVerified)
+    .Where(u => u.IsOnlnie)
+    .Where(u => !_previouslyTargetedUsers.Countains(u))
+    .ToList();
+
+
+// correct
+private List<User> GetTargetUsers()
+{
+    return users
+    .Where(u => MinTargetAge <= u.Age && u.Age <= MaxTargetAge)
+    .Where(u => u.IsVerified)
+    .Where(u => u.IsOnlnie)
+    .Where(u => !_previouslyTargetedUsers.Countains(u))
+    .ToList();
+}
+```
+</details>
+
 ### Formatting
 
 These rules are the recommended formatting. But if in any particular case other formatting is more readable, it can also
 be used.
+
+Even if the following rules say that certain members should not have a newline between them, it is still acceptable to
+divide them into groups with a single newline between groups.
 
 There should be no whitespace between a method name and its parameters.
 
@@ -221,6 +264,8 @@ There should be a single newline between functions with a block or a complex exp
 There should be a single newline between different kinds of members (fields, properties, methods, etc.).
 
 An opening brace should be on a new line.
+
+Indentation: 4 spaces.
 
 <details>
 <summary>Example</summary>
@@ -266,7 +311,7 @@ When comparing a value to with boundary values, all of the values should be sort
 
 Use var where possible.
 
-Use explicit privacy modifiers where possible.
+Use explicit privacy modifiers where possible. The exception are interface members, they should be implicitly public.
 
 <details>
 <summary>Example</summary>
@@ -354,6 +399,8 @@ Assert.That(result, Is.Not.EqualTo(0));
 |---------------|----------------|
 | Property name | `someProperty` |
 
+Indentation: 4 spaces.
+
 ## Miscellaneous
 
 When applying naming rules, abbreviations should be treated like single words.
@@ -365,3 +412,5 @@ Incorrect: `JSONParser`
 
 Correct: `JsonParser`
 </details>
+
+In any text files, line width should be no more than 120 characters.
