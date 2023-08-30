@@ -4,7 +4,7 @@ This is the convention for my personal projects, covering various aspects of dev
 
 ## Style convention versioning
 
-Current version: 2.0.2
+Current version: 3.0
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
 name, a used version and a link to a corresponding version branch of this repository, like this:
@@ -253,12 +253,14 @@ There should be a single whitespace between a loop or branching operator and its
 
 There should be no newline between fields.
 
-There should be no newline between auto-properties or properties with a simple expression body getter.
+There should be no newline between auto-properties, properties with a simple expression body getter or 
+abstract properties.
 
 There should be a single newline between properties with a block or a complex expression body getter
 (and between them and simple expression body or auto-properties).
 
-There should be no newline between functions with a simple expression body.
+There should be no newline between functions with a simple expression body or an empty body on the same line or 
+abstract methods.
 
 There should be a single newline between functions with a block or a complex expression body
 (and between them and simple expression body functions).
@@ -352,7 +354,10 @@ private void Foo(int value) // method
 
 ## Zenject
 
-Binding ID naming: `SomeBinding`
+| Object           | Naming            |
+|------------------|-------------------|
+| Binding ID       | `SomeBinding`     |
+| Injection Method | `SomeClassInject` |
 
 Injection methods priority (from most recommended to least recommended):
 - Injection using constructor
@@ -361,18 +366,21 @@ Injection methods priority (from most recommended to least recommended):
 
 A class should have no more than one injection method.
 
-An injection method should be named `{ClassName}Inject`.
-
 ## NUnit
+
+| Object          | Naming                                                       |
+|-----------------|--------------------------------------------------------------|
+| Test fixture    | `SomeClassTests`                                             |
+| Test            | `SomeMethod_SomeStateAndArgs_SomeResult` (no `Async` suffix) |
+| Setup method    | `SomeFixtureSetUp`                                           |
+| Teardown method | `SomeFixtureTearDown`                                        |
 
 Use the constraint model for assertions where possible.
 
 When asserting that an object, inheriting from UnityEngine.Object, is null or not null, use `UnityEngine.Assertions.Assert`
 instead of `NUnit.Framework.Assert`. For this purpose use the following type alias: `using UAssert = UnityEngine.Assertions.Assert;`
 
-A test suite should have no more than one setup and teardown methods.
-
-Setup and teardown methods should be named `{ClassName}SetUp` and `{ClassName}TearDown`. 
+A test fixture should have no more than one setup and teardown methods.
 
 <details>
 <summary>Example</summary>
