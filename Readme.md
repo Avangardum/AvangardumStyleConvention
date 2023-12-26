@@ -76,6 +76,8 @@ Use file-scoped namespaces where possible.
 
 Each source code file should contain only one non-nested type.
 
+Do not use primary constructors.
+
 ### Enums
 
 Enums shouldn't have a `None` value. For the purpose of representing nothing use `null`.
