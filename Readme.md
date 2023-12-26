@@ -250,7 +250,7 @@ Standard names for interfaces:
 | Allows to create something                                                                | ISomethingFactory                |
 | Allows to get something (not necessarily creating it)                                     | ISomethingGetter                 |
 | Allows to set something                                                                   | ISomethingSetter                 |
-| Allows to get or set something                                                            | ISomethingGetterSetter           |
+| Allows to get or set something                                                            | ISomethingRepository             |
 | Notifies about something (with an event, or otherwise)                                    | ISomethingPublisher              |
 | Maps some one thing to some another thing (both can be named with a shared name)          | ISomethingMapper                 |
 | Maps one thing to another item (both can NOT be named with a shared name)                 | IOneThingToAnotherItemMapper     |
