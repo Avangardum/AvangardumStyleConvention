@@ -4,7 +4,7 @@ This is the convention for my personal projects, covering various aspects of dev
 
 ## Style convention versioning
 
-Current version: 3.0
+Current version: wip
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
 name, a used version and a link to a corresponding version branch of this repository, like this:
@@ -313,7 +313,7 @@ public int GetFoo(int n)
 
 When comparing a value to with boundary values, all of the values should be sorted in ascending order from left to right.
 
-Use var where possible.
+Use var where possible. (Unless you need to specify the collection type to use a collection expression)
 
 Use explicit privacy modifiers where possible. The exception are interface members, they should be implicitly public.
 
@@ -337,6 +337,9 @@ private void Foo(int value) // method
     if (!isValid) return;
     Bar();
 }
+
+// still correct
+List<int> numbers = [1, 2, 3];
 ```
 </details>
 
