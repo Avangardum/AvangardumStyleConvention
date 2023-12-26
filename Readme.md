@@ -313,9 +313,12 @@ public int GetFoo(int n)
 
 When comparing a value to with boundary values, all of the values should be sorted in ascending order from left to right.
 
-Use var where possible. (Unless you need to specify the collection type to use a collection expression)
+Use var where possible. (Unless you need to specify the collection type to use a collection expression, in such case
+prefer specifying the exact type and using a collection expression over using var and a collection initializer.)
 
 Use explicit privacy modifiers where possible. The exception are interface members, they should be implicitly public.
+
+Use trailing commas only when each element is in a separate line.
 
 <details>
 <summary>Example</summary>
@@ -324,6 +327,12 @@ Use explicit privacy modifiers where possible. The exception are interface membe
 // incorrect
 void Foo(int value) // method
 {
+    var numbers1 = new List<int> { 1, 2, 3, }; 
+    var numbers2 = new List<int>
+    {
+        1,
+        2
+    };
     bool isValid = value >= MinValue && value <= MaxValue;
     if (!isValid) return;
     Bar();
@@ -333,13 +342,16 @@ void Foo(int value) // method
 // correct
 private void Foo(int value) // method
 {
+    List<int> numbers1 = [1, 2, 3];
+    List<int> numbers2 = 
+    [
+        1,
+        2,
+    ];
     var isValid = MinValue <= value && value <= MaxValue;
     if (!isValid) return;
     Bar();
 }
-
-// still correct
-List<int> numbers = [1, 2, 3];
 ```
 </details>
 
