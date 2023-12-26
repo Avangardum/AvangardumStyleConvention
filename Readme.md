@@ -392,8 +392,11 @@ A class should have no more than one injection method.
 |-----------------|--------------------------------------------------------------|
 | Test fixture    | `SomeClassTests`                                             |
 | Test            | `SomeMethod_SomeStateAndArgs_SomeResult` (no `Async` suffix) |
-| Setup method    | `SomeFixtureSetUp`                                           |
-| Teardown method | `SomeFixtureTearDown`                                        |
+
+Each test fixture should be either abstract or sealed.
+
+In sealed fixtures, setup and teardown methods should be named `SetUp` and `TearDown`. In abstract fixtures, their names
+should be prefixed with the class name, like `TestsBaseSetUp`.
 
 Use the constraint model for assertions where possible.
 
