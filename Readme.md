@@ -322,6 +322,9 @@ Use explicit privacy modifiers where possible. The exception are interface membe
 
 Use trailing commas only when each element is in a separate line.
 
+When using a switch statement or expression, there should always be a default case. If default case is invalid, 
+it should throw an ArgumentOutOfRangeException with no parameters.
+
 <details>
 <summary>Example</summary>
 
