@@ -241,6 +241,22 @@ private List<User> GetTargetUsers()
 ```
 </details>
 
+### Interfaces
+
+Standard names for interfaces:
+
+| Interface purpose                                                                         | Naming                           |
+|-------------------------------------------------------------------------------------------|----------------------------------|
+| Allows to create something                                                                | ISomethingFactory                |
+| Allows to get something (not necessarily creating it)                                     | ISomethingGetter                 |
+| Allows to set something                                                                   | ISomethingSetter                 |
+| Allows to get or set something                                                            | ISomethingGetterSetter           |
+| Notifies about something (with an event, or otherwise)                                    | ISomethingPublisher              |
+| Maps some one thing to some another thing (both can be named with a shared name)          | ISomethingMapper                 |
+| Maps one thing to another item (both can NOT be named with a shared name)                 | IOneThingToAnotherItemMapper     |
+| Maps one thing to another item (both can NOT be named with a shared name) bidirectionally | IOneThingToFromAnotherItemMapper |
+
+
 ### Formatting
 
 These rules are the recommended formatting. But if in any particular case other formatting is more readable, it can also
