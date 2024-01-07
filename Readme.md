@@ -304,6 +304,15 @@ Standard names for interfaces:
 | Maps one thing to another item (both can NOT be named with a shared name)                 | IOneThingToAnotherItemMapper     |
 | Maps one thing to another item (both can NOT be named with a shared name) bidirectionally | IOneThingToFromAnotherItemMapper |
 
+### Collections
+
+Use collection expressions where possible.
+
+Use immutable collections (`ImmutableList`, `ImmutableHashSet`, etc.) where possible.
+
+Accept the most abstract collection types (`IEnumerable` > `IReadOnlyCollection` > `IReadonlyList`, etc.) as parameters.
+
+Return the most concrete collection types.
 
 ### Formatting
 
