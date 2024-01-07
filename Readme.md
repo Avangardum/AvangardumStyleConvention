@@ -482,6 +482,50 @@ Assert.That(result, Is.Not.EqualTo(0));
 ```
 </details>
 
+## Microsoft.Extensions.DependencyInjection
+
+For registering dependencies, use extension methods for IServiceCollection, each method containing a focused group of
+registrations, and returning IServiceCollection.
+
+Use method chaining for registrations.
+
+Name the parameter of the extension method `services`.
+
+Have the `return services` and `;` at separate lines.
+
+<details>
+<summary>Example</summary>
+
+```csharp
+// Program.cs
+_host.ConfigureServices(services => {
+    services
+        .AddFooBar()
+        .AddBazQux()
+})
+    
+// ServiceCollectionExtensions.cs
+public static class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddFooBar(this IServiceCollection services)
+    {
+        return services
+            .AddSingleton<IFoo, Foo>()
+            .AddSingleton<IBar, Bar>();
+            ;
+    }
+    
+    public static IServiceCollection AddBazQux(this IServiceCollection services)
+    {
+        return services
+            .AddSingleton<IBaz, Baz>()
+            .AddSingleton<IQux, Qux>();
+            ;
+    }
+}
+```
+</details>
+
 ## Git
 
 | Object      | Naming           |
