@@ -83,24 +83,22 @@ Do not use primary constructors.
 
 Enums shouldn't have a `None` value. For the purpose of representing nothing use `null`.
 
-All enum constants should have an integer value explicitly specified.
-
-The first enum constant should have the 0 value.
+All enum constants should NOT have an integer value explicitly specified.
 
 <details>
 <summary>Example</summary>
 
 ```csharp
 // incorrect
-public enum Season { None, Winter, Spring, Summer, Autumn }
+public enum Season { None = 0, Winter = 1, Spring = 2, Summer = 3, Autumn = 4 }
 
 // correct
 public enum Season 
 { 
-    Winter = 0, 
-    Spring = 1, 
-    Summer = 2, 
-    Autumn = 3 
+    Winter, 
+    Spring, 
+    Summer, 
+    Autumn,
 }
 ```
 </details>
