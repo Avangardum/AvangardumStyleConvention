@@ -217,6 +217,11 @@ public class KillReporter()
 Do not use expression body declaration if it is more than one line long. Having a signature and an expression body on
 different lines is still acceptable.
 
+Do not mutate parameters unless they are `ref` or `out`.
+
+Add the `m_` prefix to local variables that are meant to be mutated. If a local variable doesn't have this prefix, it
+should not be mutated.
+
 <details>
 <summary>Example</summary>
 
