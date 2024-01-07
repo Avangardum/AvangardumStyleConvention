@@ -141,10 +141,11 @@ Events should use the `EventHandler` delegate. If there are no arguments to pass
 If there are arguments to pass, the generic version of `EventHandler` should be used and arguments should be passed 
 in an event arguments object.
 
-Event argument types should have the `EventArgs` suffix.
+Event argument types should follow one of the following patterns: *event* + Args (example: `DyingArgs`),
+*sender* + *event* + Args (example: `CharacterDyingArgs`).
 
-Event handler method name should follow one of the following patterns: On + *event* (example: `OnDying`), On + *sender* + *event*
-(example: `OnCharacterDied`).
+Event handler method names should follow one of the following patterns: On + *event* (example: `OnDying`), 
+On + *sender* + *event* (example: `OnCharacterDying`).
 
 Event handler methods should have 2 parameters: `sender` and `e`.
 
@@ -154,9 +155,10 @@ Events should be invoked using the `Invoke` method.
 
 Events should be invoked using the `?.` operator.
 
-Events that are invoked before something happens should be named as verbs in present continuous.
+Events that are invoked before something happens should be named as verbs in present continuous 
+(example: `CharacterDying`).
 
-Events that are invoked after something happens should be named as verbs in past simple.
+Events that are invoked after something happens should be named as verbs in past simple. (example: `CharacterDied`).
 
 <details>
 <summary>Example</summary>
@@ -232,11 +234,11 @@ private List<User> GetTargetUsers() => users
 private List<User> GetTargetUsers()
 {
     return users
-    .Where(u => MinTargetAge <= u.Age && u.Age <= MaxTargetAge)
-    .Where(u => u.IsVerified)
-    .Where(u => u.IsOnlnie)
-    .Where(u => !_previouslyTargetedUsers.Countains(u))
-    .ToList();
+        .Where(u => MinTargetAge <= u.Age && u.Age <= MaxTargetAge)
+        .Where(u => u.IsVerified)
+        .Where(u => u.IsOnlnie)
+        .Where(u => !_previouslyTargetedUsers.Countains(u))
+        .ToList();
 }
 ```
 </details>
@@ -269,23 +271,26 @@ There should be no whitespace between a method name and its parameters.
 
 There should be a single whitespace between a loop or branching operator and its condition.
 
-There should be no newline between fields.
+There should be no newline between fields and or between auto-properties with no initializer or with a same line
+initializer.
 
-There should be no newline between auto-properties, properties with a simple expression body getter or 
-abstract properties.
+There should be a single newline between fields or between auto-properties with a separate line(s) initializer.
 
-There should be a single newline between properties with a block or a complex expression body getter
-(and between them and simple expression body or auto-properties).
+There should be no newline between properties with a same line expression body getter or abstract properties.
 
-There should be no newline between functions with a simple expression body or an empty body on the same line or 
+There should be a single newline between properties with a block or a separate line expression body getter
+(and between them and same line expression body or auto-properties).
+
+There should be no newline between functions with a same line expression body or a same line empty body or 
 abstract methods.
 
-There should be a single newline between functions with a block or a complex expression body
-(and between them and simple expression body functions).
+There should be a single newline between functions with a block or a separate line expression body
+(and between them and same line expression body functions).
 
 There should be a single newline between different kinds of members (fields, properties, methods, etc.).
 
-An opening brace should be on a new line.
+If there is a block of code in parentheses, square brackets or curly braces, spanning multiple lines,
+the opening and closing symbols should be on their own lines.
 
 Indentation: 4 spaces.
 
@@ -297,6 +302,9 @@ Indentation: 4 spaces.
 private int _a;
 
 private int _b;
+private int[] _c = [
+        1,
+        2,]
 public int C { get; set; }
 
 public int SqrC => A * A;
@@ -312,6 +320,12 @@ public int GetFoo (int n) {
 // correct
 private int _a;
 private int _b;
+
+private int[] _c = 
+[
+    1,
+    2,
+];
 
 public int C { get; set; }
 public int SqrC => A * A;
@@ -336,7 +350,7 @@ prefer specifying the exact type and using a collection expression over using va
 
 Use explicit privacy modifiers where possible. The exception are interface members, they should be implicitly public.
 
-Use trailing commas only when each element is in a separate line.
+Use trailing commas when each element is in a separate line. Don't use them when all elements are in the same line.
 
 When using a switch statement or expression, there should always be a default case. If default case is invalid, 
 it should throw an ArgumentOutOfRangeException with no parameters.
