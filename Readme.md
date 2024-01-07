@@ -212,7 +212,7 @@ public class KillReporter()
 ```
 </details>
 
-### Methods, properties, indexers
+### Functions, properties, indexers
 
 Do not use expression body declaration if it is more than one line long. Having a signature and an expression body on
 different lines is still acceptable.
@@ -222,16 +222,18 @@ Do not mutate parameters unless they are `ref` or `out`.
 Add the `m_` prefix to local variables that are meant to be mutated. If a local variable doesn't have this prefix, it
 should not be mutated.
 
+Do not use the `delegate` keyword for declaring anonymous functions. Use lambda functions instead.
+
+Lambda function parameters should be named either as normal function parameters, or as abbreviations.
+
 <details>
 <summary>Example</summary>
 
 ```csharp
 // incorrect
-private List<User> GetTargetUsers() => users
-    .Where(u => MinTargetAge <= u.Age && u.Age <= MaxTargetAge)
-    .Where(u => u.IsVerified)
-    .Where(u => u.IsOnlnie)
-    .Where(u => !_previouslyTargetedUsers.Countains(u))
+private List<User> GetTargetUsers() => _users
+    .Where(delegate(User x) { return x.IsVerified; })
+    .Where(delegate(User x) { return x.IsOnline; })
     .ToList();
 
 
@@ -239,10 +241,8 @@ private List<User> GetTargetUsers() => users
 private List<User> GetTargetUsers()
 {
     return users
-        .Where(u => MinTargetAge <= u.Age && u.Age <= MaxTargetAge)
         .Where(u => u.IsVerified)
         .Where(u => u.IsOnlnie)
-        .Where(u => !_previouslyTargetedUsers.Countains(u))
         .ToList();
 }
 ```
