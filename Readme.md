@@ -261,38 +261,19 @@ Standard names for interfaces:
 
 ### Formatting
 
-These rules are the recommended formatting. But if in any particular case other formatting is more readable, it can also
-be used.
-
-Even if the following rules say that certain members should not have a newline between them, it is still acceptable to
-divide them into groups with a single newline between groups.
-
 There should be no whitespace between a method name and its parameters.
 
 There should be a single whitespace between a loop or branching operator and its condition.
-
-There should be no newline between fields and or between auto-properties with no initializer or with a same line
-initializer.
-
-There should be a single newline between fields or between auto-properties with a separate line(s) initializer.
-
-There should be no newline between properties with a same line expression body getter or abstract properties.
-
-There should be a single newline between properties with a block or a separate line expression body getter
-(and between them and same line expression body or auto-properties).
-
-There should be no newline between functions with a same line expression body or a same line empty body or 
-abstract methods.
-
-There should be a single newline between functions with a block or a separate line expression body
-(and between them and same line expression body functions).
-
-There should be a single newline between different kinds of members (fields, properties, methods, etc.).
 
 If there is a block of code in parentheses, square brackets or curly braces, spanning multiple lines,
 the opening and closing symbols should be on their own lines.
 
 Indentation: 4 spaces.
+
+Having a single newline between members of a type is always acceptable. However, it is possible to omit it if all of
+the following conditions are met:
+- Both members have the same member declaration order (for example, both are private non-static non-readonly fields).
+- Both members occupy only 1 line each (including comments and initializers).
 
 <details>
 <summary>Example</summary>
@@ -301,10 +282,13 @@ Indentation: 4 spaces.
 // incorrect
 private int _a;
 
+/// <summary>
+/// Lorem ipsum
+/// </summary>
 private int _b;
 private int[] _c = [
-        1,
-        2,]
+    1,
+    2,]
 public int C { get; set; }
 
 public int SqrC => A * A;
@@ -319,6 +303,10 @@ public int GetFoo (int n) {
 
 // correct
 private int _a;
+
+/// <summary>
+/// Lorem ipsum
+/// </summary>
 private int _b;
 
 private int[] _c = 
