@@ -240,10 +240,36 @@ private List<User> GetTargetUsers() => _users
 // correct
 private List<User> GetTargetUsers()
 {
-    return users
+    return _users
         .Where(u => u.IsVerified)
-        .Where(u => u.IsOnlnie)
+        .Where(u => u.IsOnline)
         .ToList();
+}
+```
+</details>
+
+Local function parameters and variables should have the `_` suffix. For local function inside another local function
+the suffix should be `__` and so on.
+
+<details>
+<summary>Example</summary>
+
+```csharp
+public void Foo()
+{
+    var a = 1;
+    Bar(a);
+    
+    void Bar(int a_)
+    {
+        var b_ = 2;
+        Qux(a_, b_);
+        
+        void Qux(int a__, int b__)
+        {
+            var c__ = 3;
+        }
+    }
 }
 ```
 </details>
