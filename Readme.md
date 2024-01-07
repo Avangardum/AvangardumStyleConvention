@@ -274,6 +274,21 @@ public void Foo()
 ```
 </details>
 
+If possible, return Task from a method instead of making the method async and awaiting the task.
+
+<details>
+<summary>Example</summary>
+
+```csharp
+// incorrect
+async Task FooAsync() => await BarAsync();
+
+
+// correct
+Task FooAsync() => BarAsync();
+```
+</details>
+
 ### Interfaces
 
 Standard names for interfaces:
@@ -371,9 +386,6 @@ Use explicit privacy modifiers where possible. The exception are interface membe
 
 Use trailing commas when each element is in a separate line. Don't use them when all elements are in the same line.
 
-When using a switch statement or expression, if the default case is invalid, 
-it should throw an ArgumentOutOfRangeException with no parameters.
-
 <details>
 <summary>Example</summary>
 
@@ -408,6 +420,9 @@ private void Foo(int value) // method
 }
 ```
 </details>
+
+When using a switch statement or expression, if the default case is invalid,
+it should throw an ArgumentOutOfRangeException with no parameters.
 
 ## Files
 
