@@ -551,6 +551,34 @@ public static class ServiceCollectionExtensions
 
 Indentation: 4 spaces.
 
+## XML, HTML, XAML
+
+If there is no closing tag for a tag, it should be self-closing.
+
+There should be no leading or trailing whitespaces in tags.
+
+A tag should ether occupy one line with all its attributes, or have each attribute on a separate line.
+
+If each attribute is on a separate line, the first one should be on the same line as the tag, the others should have
+their first character at the same column as the first attribute.
+
+When choosing between writing a simple value inside a tag and using an attribute instead, use an attribute.
+
+Indentation: 4 spaces.
+
+<details>
+<summary>Example</summary>
+
+```xaml
+<StackPanel Orientation="Horizontal">
+    <TextBlock Text="Lorem ipsum"
+               Background="DodgerBlue"
+               Width="150"
+               Height="30"/>
+</StackPanel>
+```
+</details>
+
 ## Miscellaneous
 
 When applying naming rules, abbreviations should be treated like single words.
