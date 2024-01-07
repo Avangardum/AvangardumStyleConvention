@@ -7,7 +7,8 @@ This is the convention for my personal projects, covering various aspects of dev
 Current version: 4.0
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
-name, a used version and a link to a corresponding version branch of this repository, like this:
+name, a used version, a link to a corresponding version branch of this repository and the full text of this convention, 
+like this:
 
 ```markdown
 This project uses Avangardum's style convention v1.0
@@ -46,8 +47,8 @@ Patch version is incremented when there are fixes that don't change the essence 
 | Non-private field                          | `SomeField`         |
 | Event                                      | `SomeEvent`         |
 | Property                                   | `SomeProperty`      |
-| Synchronous function                       | `SomeFunction`      |
-| Asynchronous function                      | `SomeFunctionAsync` |
+| Function that doesn't return Task          | `SomeFunction`      |
+| Function that returns Task                 | `SomeFunctionAsync` |
 | Function parameter                         | `someParameter`     |
 | Local variable                             | `someVariable`      |
 | Local constant                             | `someConstant`      |
