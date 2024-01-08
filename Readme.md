@@ -320,7 +320,8 @@ There should be no whitespace between a method name and its parameters.
 There should be a single whitespace between a loop or branching operator and its condition.
 
 If there is a block of code in parentheses, square brackets or curly braces, spanning multiple lines,
-the opening and closing symbols should be on their own lines.
+it should be either be like a single line, but with line breaks preventing overflowing the line width limit or with 
+each element and opening/closing symbol on its own line.
 
 Indentation: 4 spaces.
 
