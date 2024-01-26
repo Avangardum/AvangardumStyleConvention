@@ -4,7 +4,7 @@ This is the convention for my personal projects, covering various aspects of dev
 
 ## Style convention versioning
 
-Current version: 7.0
+Current version: 8.0
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
 name, a used version, a link to a corresponding version branch of this repository and the full text of this convention, 
@@ -382,7 +382,9 @@ the opening and closing symbols and the content.
 When having an inline block of curly braces, there should be a whitespace between the opening and closing braces and
 the content.
 
-There should be a whitespace or a newline between an operator and its operands (except `.`, `?.`, `!.`).
+There should be a whitespace or a newline between a binary/ternary operator and its operands (except `.`, `?.`, `!.`).
+
+There should be no whitespace between an unary operator and its operand.
 
 All cases of a switch statement should be wrapped in curly braces.
 
