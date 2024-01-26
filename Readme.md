@@ -4,7 +4,7 @@ This is the convention for my personal projects, covering various aspects of dev
 
 ## Style convention versioning
 
-Current version: 8.0
+Current version: 8.0.1
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
 name, a used version, a link to a corresponding version branch of this repository and the full text of this convention, 
@@ -487,7 +487,7 @@ Prefer pattern matching (`is`) over equality comparison (`==`).
 
 Do not use the `file` access modifier.
 
-In internal types, do not use the `internal` access modifier, instead use `public`.
+In internal types, do not use the `internal` access modifier on their members, instead use `public`.
 
 Use the most restrictive access modifier possible
 (`private` > `private protected` > `protected` > `internal` > `protected internal` > `public`).
