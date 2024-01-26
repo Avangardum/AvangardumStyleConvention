@@ -4,7 +4,7 @@ This is the convention for my personal projects, covering various aspects of dev
 
 ## Style convention versioning
 
-Current version: 6.0
+Current version: 7.0
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
 name, a used version, a link to a corresponding version branch of this repository and the full text of this convention, 
@@ -28,9 +28,9 @@ Any project specific rules should be written in this file.
 
 Version has the following format: major.minor[.patch]
 
-Major version is incremented when there are breaking changes.
+Major version is incremented when there are conflicting changes.
 
-Minor version is incremented when there are non-breaking changes.
+Minor version is incremented when there are non-conflicting changes.
 
 Patch version is incremented when there are fixes that don't change the essence of the convention.
 
@@ -77,13 +77,49 @@ Use file-scoped namespaces where possible.
 
 Each source code file should contain only one non-nested type.
 
-Do not use primary constructors.
+Do not use primary constructors for non-records.
+
+Classes that are not meant to be inherited from, but are meant to be instantiated, should be sealed.
+
+Classes that are not meant to be instantiated, but are meant to be inherited from, should be abstract.
+
+Classes that are not meant to be neither instantiated, nor inherited from, should be static.
+
+Inside a type constructor, when choosing between reading a parameter and reading a field, prefer reading a parameter.
+
+When a type is instantiated using a parameterless constructor with property initializers, the parentheses should be
+omitted.
+
+### Data transfer objects
+
+Data transfer objects (including event args) should be class records.
+
+If changing a DTO is not anticipated, it should have the primary constructor.
+
+If changing a DTO is anticipated, it should have the default constructor, and all of its properties should be
+declared in the DTO body with `{ get; init; }` accessors.
+
+<details>
+<summary>Example</summary>
+
+```csharp
+// FooBar is a pair of Foo and Bar, it will not change.
+internal sealed record FooBar(Foo Foo, Bar Bar);
+
+// Event args can change in the future.
+internal sealed record SomethingHappenedArgs
+{
+    public required Foo Foo { get; init; }
+    public Bar? Bar { get; init; }
+}
+```
+</details>
 
 ### Enums
 
 Enums shouldn't have a `None` value. For the purpose of representing nothing use `null`.
 
-All enum constants should NOT have an integer value explicitly specified.
+All enum constants shouldn't have an integer value explicitly specified.
 
 <details>
 <summary>Example</summary>
@@ -225,6 +261,8 @@ Do not use the `delegate` keyword for declaring anonymous functions. Use lambda 
 
 Lambda function parameters should be named either as normal function parameters, or as abbreviations.
 
+Abstract methods' optional parameters should have their default value equal to the default value of their type.
+
 <details>
 <summary>Example</summary>
 
@@ -300,8 +338,8 @@ Standard names for interfaces:
 | Allows to get or set something                                                            | ISomethingRepository             |
 | Notifies about something (with an event, or otherwise)                                    | ISomethingPublisher              |
 | Maps some one thing to some another thing (both can be named with a shared name)          | ISomethingMapper                 |
-| Maps one thing to another item (both can NOT be named with a shared name)                 | IOneThingToAnotherItemMapper     |
-| Maps one thing to another item (both can NOT be named with a shared name) bidirectionally | IOneThingToFromAnotherItemMapper |
+| Maps one thing to another item (both can not be named with a shared name)                 | IOneThingToAnotherItemMapper     |
+| Maps one thing to another item (both can not be named with a shared name) bidirectionally | IOneThingToFromAnotherItemMapper |
 
 ### Collections
 
@@ -330,6 +368,24 @@ the following conditions are met:
 - Both members have the same member declaration order (for example, both are private non-static non-readonly fields).
 - Both members occupy only 1 line each (including comments and initializers).
 
+Use trailing commas when each element is in a separate line. Don't use them when all elements are in the same line.
+
+When having a comma-separated list of elements, each comma should be followed by a whitespace or a newline.
+The same applies to a semicolon-separated list of elements.
+
+When doing a line break on an operator, the operator should be at the end of a line, not at the beginning.
+The exceptions are the `.`, `?.`, `!.` operators, which should be at the beginning of a line.
+
+When having an inline block of parentheses, square brackets or angle brackets, there should be no whitespace between
+the opening and closing symbols and the content.
+
+When having an inline block of curly braces, there should be a whitespace between the opening and closing braces and
+the content.
+
+There should be a whitespace or a newline between an operator and its operands (except `.`, `?.`, `!.`).
+
+All cases of a switch statement should be wrapped in curly braces.
+
 <details>
 <summary>Example</summary>
 
@@ -343,10 +399,11 @@ private int _a;
 private int _b;
 private int[] _c = [
     1,
-    2,]
-public int C { get; set; }
+    2]
+private int[] _d = [ 1,2, ];
+public int C {get;set;}
 
-public int SqrC => A * A;
+public int SqrC => C * C;
 public int GetCPlus (int n) => C + n;
 
 public int GetCMinus (int n) => C - n;
@@ -370,8 +427,10 @@ private int[] _c =
     2,
 ];
 
+private int[] _d = [1, 2];
+
 public int C { get; set; }
-public int SqrC => A * A;
+public int SqrC => C * C;
 
 public int GetCPlus(int n) => C + n;
 public int GetCMinus(int n) => C - n;
@@ -386,14 +445,12 @@ public int GetFoo(int n)
 
 ### Miscellaneous
 
-When comparing a value to with boundary values, all of the values should be sorted in ascending order from left to right.
+When comparing a value with boundary values, all of the values should be sorted in ascending order from left to right.
 
 Use var where possible. (Unless you need to specify the collection type to use a collection expression, in such case
 prefer specifying the exact type and using a collection expression over using var and a collection initializer.)
 
 Use explicit privacy modifiers where possible. The exception are interface members, they should be implicitly public.
-
-Use trailing commas when each element is in a separate line. Don't use them when all elements are in the same line.
 
 <details>
 <summary>Example</summary>
@@ -402,12 +459,6 @@ Use trailing commas when each element is in a separate line. Don't use them when
 // incorrect
 void Foo(int value) // method
 {
-    var numbers1 = new List<int> { 1, 2, 3, }; 
-    var numbers2 = new List<int>
-    {
-        1,
-        2
-    };
     bool isValid = value >= MinValue && value <= MaxValue;
     if (!isValid) return;
     Bar();
@@ -417,12 +468,6 @@ void Foo(int value) // method
 // correct
 private void Foo(int value) // method
 {
-    List<int> numbers1 = [1, 2, 3];
-    List<int> numbers2 = 
-    [
-        1,
-        2,
-    ];
     var isValid = MinValue <= value && value <= MaxValue;
     if (!isValid) return;
     Bar();
@@ -432,6 +477,28 @@ private void Foo(int value) // method
 
 When using a switch statement or expression, if the default case is invalid,
 it should throw an ArgumentOutOfRangeException with no parameters.
+
+When calling `ToString` (whether explicitly or implicitly, using string interpolation or concatenation), which can
+accept a format string or culture info, such data should be passed explicitly.
+
+Prefer pattern matching (`is`) over equality comparison (`==`).
+
+Do not use the `file` access modifier.
+
+In internal types, do not use the `internal` access modifier, instead use `public`.
+
+Use the most restrictive access modifier possible
+(`private` > `private protected` > `protected` > `internal` > `protected internal` > `public`).
+
+Use modifiers in the following order:
+
+- access modifiers
+- `new`
+- `const`, `readonly`, `volatile`
+- `static`, `sealed`, `abstract`, `virtual`, `override`
+- `extern`
+- `unsafe`
+- `partial`
 
 ## Files
 
@@ -444,6 +511,12 @@ it should throw an ArgumentOutOfRangeException with no parameters.
 | Object                                                  | Naming       |
 |---------------------------------------------------------|--------------|
 | All Unity objects (Game objects, Animator states, etc.) | `SomeObject` |
+
+If you need to have serializable enums that show in the inspector, do not use your business logic enums. Instead, create
+special serializable enums with the `S_` prefix, use them anywhere where you need serialization, and use the business
+login enums in your business logic, mapping them on the boundary. Unlike the business logic enums, the serializable
+enums can have a `None` value, and their constants should have integer values explicitly specified, starting from 0
+with the default step of 1000 to allow inserting new values in between in the future.
 
 ## Zenject
 
@@ -473,8 +546,9 @@ should be prefixed with the class name, like `TestsBaseSetUp`.
 
 Use the constraint model for assertions where possible.
 
-When asserting that an object, inheriting from UnityEngine.Object, is null or not null, use `UnityEngine.Assertions.Assert`
-instead of `NUnit.Framework.Assert`. For this purpose use the following type alias: `using UAssert = UnityEngine.Assertions.Assert;`
+When asserting that an object, inheriting from UnityEngine.Object, is null or not null, use 
+`UnityEngine.Assertions.Assert` instead of `NUnit.Framework.Assert`. For this purpose use the following type alias: 
+`using UAssert = UnityEngine.Assertions.Assert;`
 
 A test fixture should have no more than one setup and teardown methods.
 
@@ -592,3 +666,5 @@ Correct: `JsonParser`
 </details>
 
 In any text files, line width should be no more than 120 characters.
+
+In any text files, there should be no trailing whitespaces.
