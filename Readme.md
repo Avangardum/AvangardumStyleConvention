@@ -92,6 +92,8 @@ Inside a type constructor, when choosing between reading a parameter and reading
 When a type is instantiated using a parameterless constructor with property initializers, the parentheses should be
 omitted.
 
+If a nested type name conflicts with a property / field name, the nested type should be prefixed with `T`.
+
 ### Data transfer objects
 
 Data transfer objects (including event args) should be class records.
