@@ -405,7 +405,7 @@ private int _a;
 private int _b;
 private int[] _c = [
     1,
-    2]
+    2,]
 private int[] _d = [ 1,2, ];
 public int C {get;set;}
 
@@ -430,7 +430,7 @@ private int _b;
 private int[] _c = 
 [
     1,
-    2,
+    2
 ];
 
 private int[] _d = [1, 2];
