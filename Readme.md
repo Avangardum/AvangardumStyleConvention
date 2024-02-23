@@ -492,14 +492,13 @@ In internal types, do not use the `internal` access modifier on their members, i
 Use the most restrictive access modifier possible
 (`private` > `private protected` > `protected` > `internal` > `protected internal` > `public`).
 
-Use modifiers in the following order:
+Use modifiers in the following order (modifiers on the same line are mutually exclusive):
 
 - access modifiers
 - `new`
 - `const`, `readonly`, `volatile`
 - `static`, `sealed`, `abstract`, `virtual`, `override`
-- `extern`
-- `unsafe`
+- `extern`, `unsafe`, `async`
 - `partial`
 
 ## Files
