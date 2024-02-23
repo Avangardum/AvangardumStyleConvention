@@ -68,10 +68,12 @@ If `//` is not in the beginning of a line, it should also be preceded by a white
 
 ### Namespaces
 
-Root namespace for the project should follow the following pattern: *Developer/Company*.*Project* 
+Root namespace for a project should follow the following pattern: *Developer/Company*.*Project* 
 (examples: `Avangardum.TwilightRun`, `Hyperbox.DroneTanksArena`).
 
 Use file-scoped namespaces where possible.
+
+Namespaces should correspond to the folder structure (use automatic namespace adjustment in your IDE).
 
 ### Types
 
