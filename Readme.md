@@ -258,7 +258,7 @@ different lines is still acceptable.
 
 Do not mutate parameters unless they are `ref` or `out`.
 
-Add the `m_` prefix to local variables that are meant to be mutated. If a local variable doesn't have this prefix, it
+Add the `m` prefix to local variables that are meant to be mutated. If a local variable doesn't have this prefix, it
 should not be mutated.
 
 Do not use the `delegate` keyword for declaring anonymous functions. Use lambda functions instead.
