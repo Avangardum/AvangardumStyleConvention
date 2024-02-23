@@ -4,7 +4,7 @@ This is the convention for my personal projects, covering various aspects of dev
 
 ## Style convention versioning
 
-Current version: 8.0.1
+Current version: dev
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
 name, a used version, a link to a corresponding version branch of this repository and the full text of this convention, 
@@ -368,7 +368,7 @@ the following conditions are met:
 - Both members have the same member declaration order (for example, both are private non-static non-readonly fields).
 - Both members occupy only 1 line each (including comments and initializers).
 
-Use trailing commas when each element is in a separate line. Don't use them when all elements are in the same line.
+Don't use trailing commas.
 
 When having a comma-separated list of elements, each comma should be followed by a whitespace or a newline.
 The same applies to a semicolon-separated list of elements.
