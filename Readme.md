@@ -4,7 +4,7 @@ This is the convention for my personal projects, covering various aspects of dev
 
 ## Style convention versioning
 
-Current version: 9.0
+Current version: 9.1
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
 name, a used version, a link to a corresponding version branch of this repository and the full text of this convention, 
@@ -78,8 +78,6 @@ Namespaces should correspond to the folder structure (use automatic namespace ad
 ### Types
 
 Each source code file should contain only one non-nested type.
-
-Do not use primary constructors for non-records.
 
 Classes that are not meant to be inherited from, but are meant to be instantiated, should be sealed.
 
@@ -256,7 +254,7 @@ public class KillReporter()
 Do not use expression body declaration if it is more than one line long. Having a signature and an expression body on
 different lines is still acceptable.
 
-Do not mutate parameters unless they are `ref` or `out`.
+Do not mutate parameters unless they are `ref` or `out` (that includes primary constructor parameters).
 
 Add the `m` prefix to local variables that are meant to be mutated. If a local variable doesn't have this prefix, it
 should not be mutated.
