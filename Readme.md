@@ -4,7 +4,7 @@ This is the convention for my personal projects, covering various aspects of dev
 
 ## Style convention versioning
 
-Current version: 9.1
+Current version: 10.0
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
 name, a used version, a link to a corresponding version branch of this repository and the full text of this convention, 
@@ -498,9 +498,8 @@ Use modifiers in the following order (modifiers on the same line are mutually ex
 
 - access modifiers
 - `new`
-- `const`, `readonly`, `volatile`
 - `static`, `sealed`, `abstract`, `virtual`, `override`
-- `extern`, `unsafe`, `async`
+- `extern`, `unsafe`, `async`, `const`, `readonly`, `volatile`
 - `partial`
 
 ## Files
