@@ -4,7 +4,7 @@ This is the convention for my personal projects, covering various aspects of dev
 
 ## Style convention versioning
 
-Current version: 10.0
+Current version: dev
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
 name, a used version, a link to a corresponding version branch of this repository and the full text of this convention, 
@@ -28,33 +28,35 @@ Any project specific rules should be written in this file.
 
 Version has the following format: major.minor[.patch]
 
-Major version is incremented when there are conflicting changes.
+Major version is incremented when there are breaking changes (upgrading to a new version may require existing code
+changes)
 
-Minor version is incremented when there are non-conflicting changes.
+Minor version is incremented when there are non-breaking changes.
 
 Patch version is incremented when there are fixes that don't change the essence of the convention.
 
 ## C#
 
 ### Naming
-| Object                                     | Naming              |
-|--------------------------------------------|---------------------|
-| Namespace                                  | `SomeNamespace`     |
-| Non-interface type                         | `SomeType`          |
-| Interface                                  | `ISomeInterface`    |
-| Non-local constant / static readonly field | `SomeConstant`      |
-| Private field                              | `_someField`        |
-| Non-private field                          | `SomeField`         |
-| Event                                      | `SomeEvent`         |
-| Property                                   | `SomeProperty`      |
-| Function that doesn't return Task          | `SomeFunction`      |
-| Function that returns Task                 | `SomeFunctionAsync` |
-| Function parameter                         | `someParameter`     |
-| Local variable                             | `someVariable`      |
-| Local constant                             | `someConstant`      |
-| Region                                     | `SomeRegion`        |
-| Goto label                                 | `SomeGotoLabel`     |
-| Tuple / anonymous type member              | `SomeMember`        |
+| Object                                     | Naming               |
+|--------------------------------------------|----------------------|
+| Namespace                                  | `SomeNamespace`      |
+| Non-interface type                         | `SomeType`           |
+| Interface                                  | `ISomeInterface`     |
+| Non-local constant / static readonly field | `SomeConstant`       |
+| Private field                              | `_someField`         |
+| Non-private field                          | `SomeField`          |
+| Event                                      | `SomeEvent`          |
+| Property                                   | `SomeProperty`       |
+| Function that doesn't return Task          | `SomeFunction`       |
+| Function that returns Task                 | `SomeFunctionAsync`  |
+| Function parameter                         | `someParameter`      |
+| Local variable                             | `someVariable`       |
+| Local constant                             | `someConstant`       |
+| Region                                     | `SomeRegion`         |
+| Goto label                                 | `SomeGotoLabel`      |
+| Tuple / anonymous type member              | `SomeMember`         |
+| Generic type parameter                     | `TSomeTypeParameter` |
 
 ### Comments
 
@@ -71,7 +73,7 @@ If `//` is not in the beginning of a line, it should also be preceded by a white
 Root namespace for a project should follow the following pattern: *Developer/Company*.*Project* 
 (examples: `Avangardum.TwilightRun`, `Hyperbox.DroneTanksArena`).
 
-Use file-scoped namespaces where possible.
+Use file-scoped namespaces.
 
 Namespaces should correspond to the folder structure (use automatic namespace adjustment in your IDE).
 
@@ -96,9 +98,9 @@ If a nested type name conflicts with a property / field name, the nested type sh
 
 Data transfer objects (including event args) should be class records.
 
-If changing a DTO is not anticipated, it should have the primary constructor.
+If changing a DTO is not anticipated, it should have a primary constructor.
 
-If changing a DTO is anticipated, it should have the default constructor, and all of its properties should be
+If changing a DTO is anticipated, it should have a default constructor, and all of its properties should be
 declared in the DTO body with `{ get; init; }` accessors.
 
 <details>
@@ -256,14 +258,9 @@ different lines is still acceptable.
 
 Do not mutate parameters unless they are `ref` or `out` (that includes primary constructor parameters).
 
-Add the `m` prefix to local variables that are meant to be mutated. If a local variable doesn't have this prefix, it
-should not be mutated.
-
 Do not use the `delegate` keyword for declaring anonymous functions. Use lambda functions instead.
 
 Lambda function parameters should be named either as normal function parameters, or as abbreviations.
-
-Abstract methods' optional parameters should have their default value equal to the default value of their type.
 
 <details>
 <summary>Example</summary>
@@ -287,29 +284,22 @@ private List<User> GetTargetUsers()
 ```
 </details>
 
-Local function parameters and variables should have the `_` suffix. For local function inside another local function
-the suffix should be `__` and so on.
+Abstract methods' optional parameters should have their default value equal to null.
 
 <details>
 <summary>Example</summary>
 
 ```csharp
-public void Foo()
+// incorrect
+public abstract void LogIn(string userName = "admin");
+
+// correct
+public abstract void LogIn(string? userName = null);
+
+// in a deriving class
+public override void LogIn(string? userName = null)
 {
-    var a = 1;
-    Bar(a);
-    
-    void Bar(int a_)
-    {
-        var b_ = 2;
-        Qux(a_, b_);
-        
-        void Qux(int a__, int b__)
-        {
-            var c__ = 3;
-        }
-    }
-}
+    var notNullUserName = userName ?? "admin";
 ```
 </details>
 
@@ -322,7 +312,6 @@ If possible, return Task from a method instead of making the method async and aw
 // incorrect
 async Task FooAsync() => await BarAsync();
 
-
 // correct
 Task FooAsync() => BarAsync();
 ```
@@ -334,10 +323,10 @@ Standard names for interfaces:
 
 | Interface purpose                                                                         | Naming                           |
 |-------------------------------------------------------------------------------------------|----------------------------------|
-| Allows to create something                                                                | ISomethingFactory                |
-| Allows to get something (not necessarily creating it)                                     | ISomethingGetter                 |
-| Allows to set something                                                                   | ISomethingSetter                 |
-| Allows to get or set something                                                            | ISomethingRepository             |
+| Creates something                                                                         | ISomethingFactory                |
+| Gets something (not necessarily creating it)                                              | ISomethingGetter                 |
+| Sets something                                                                            | ISomethingSetter                 |
+| Gets or sets something                                                                    | ISomethingGetterSetter           |
 | Notifies about something (with an event, or otherwise)                                    | ISomethingPublisher              |
 | Maps some one thing to some another thing (both can be named with a shared name)          | ISomethingMapper                 |
 | Maps one thing to another item (both can not be named with a shared name)                 | IOneThingToAnotherItemMapper     |
@@ -345,19 +334,22 @@ Standard names for interfaces:
 
 ### Collections
 
-Use collection expressions where possible.
+Use collection expressions where possible (`ImmutableList<int> a = [0, 1, 2];`).
 
 Use immutable collections (`ImmutableList`, `ImmutableHashSet`, etc.) where possible.
 
-Accept the most abstract collection types (`IEnumerable` > `IReadOnlyCollection` > `IReadonlyList`, etc.) as parameters.
-
-Return the most concrete collection types.
+Functions should both accept and return concrete collection types.
 
 ### Formatting
 
 There should be no whitespace between a method name and its parameters.
 
-There should be a single whitespace between a loop or branching operator and its condition.
+In a new expression there should be no whitespace between an object type and its constructor parameters.
+
+In a new expression there should be a single whitespace between constructor parameters and field initializers, or, in
+case if there are no constructor parameters, between an object type and field initializers.
+
+There should be a single whitespace between `do`, `while`, `if`, `using`, `fixed` and the following parentheses.
 
 If there is a block of code in parentheses, square brackets or curly braces, spanning multiple lines,
 it should be either be like a single line, but with line breaks preventing overflowing the line width limit or with 
@@ -492,15 +484,17 @@ Do not use the `file` access modifier.
 In internal types, do not use the `internal` access modifier on their members, instead use `public`.
 
 Use the most restrictive access modifier possible
-(`private` > `private protected` > `protected` > `internal` > `protected internal` > `public`).
+(`private` > `private protected` > `protected` / `internal` > `protected internal` > `public`).
 
 Use modifiers in the following order (modifiers on the same line are mutually exclusive):
 
-- access modifiers
+- `private`, `private protected`, `protected`, `internal`, `protected internal`, `public`
 - `new`
 - `static`, `sealed`, `abstract`, `virtual`, `override`
 - `extern`, `unsafe`, `async`, `const`, `readonly`, `volatile`
 - `partial`
+
+Do not use the `Predicate` type, instead use `Func`.
 
 ## Files
 
@@ -515,10 +509,10 @@ Use modifiers in the following order (modifiers on the same line are mutually ex
 | All Unity objects (Game objects, Animator states, etc.) | `SomeObject` |
 
 If you need to have serializable enums that show in the inspector, do not use your business logic enums. Instead, create
-special serializable enums with the `S_` prefix, use them anywhere where you need serialization, and use the business
-login enums in your business logic, mapping them on the boundary. Unlike the business logic enums, the serializable
-enums can have a `None` value, and their constants should have integer values explicitly specified, starting from 0
-with the default step of 1000 to allow inserting new values in between in the future.
+special serializable enums with the `Serializable` prefix, use them anywhere where you need serialization, and use the 
+business logic enums in your business logic, mapping them on the boundary. Unlike the business logic enums, the 
+serializable enums can have a `None` value, and their constants should have integer values explicitly specified, 
+starting from 0 with the default step of 1000 to allow inserting new values in between in the future.
 
 ## Zenject
 
@@ -536,23 +530,22 @@ A class should have no more than one injection method.
 
 ## NUnit
 
-| Object          | Naming                                                       |
-|-----------------|--------------------------------------------------------------|
-| Test fixture    | `SomeClassTests`                                             |
-| Test            | `SomeMethod_SomeStateAndArgs_SomeResult` (no `Async` suffix) |
+| Object     | Naming                                                       |
+|------------|--------------------------------------------------------------|
+| Test class | `SomeClassTests`                                             |
+| Test       | `SomeMethod_SomeStateAndArgs_SomeResult` (no `Async` suffix) |
 
-Each test fixture should be either abstract or sealed.
+Each test class should be either abstract or sealed.
 
-In sealed fixtures, setup and teardown methods should be named `SetUp` and `TearDown`. In abstract fixtures, their names
-should be prefixed with the class name, like `TestsBaseSetUp`.
+In sealed test classes, setup and teardown methods should be named `SetUp` and `TearDown`. In abstract fixtures, 
+their names should be prefixed with the class name, like `TestsBaseSetUp`.
 
-Use the constraint model for assertions where possible.
+Use Fluent Assertions.
 
 When asserting that an object, inheriting from UnityEngine.Object, is null or not null, use 
-`UnityEngine.Assertions.Assert` instead of `NUnit.Framework.Assert`. For this purpose use the following type alias: 
-`using UAssert = UnityEngine.Assertions.Assert;`
+`UnityEngine.Assertions.Assert`.
 
-A test fixture should have no more than one setup and teardown methods.
+A test class should have no more than one setup and teardown methods.
 
 <details>
 <summary>Example</summary>
@@ -561,11 +554,23 @@ A test fixture should have no more than one setup and teardown methods.
 // incorrect
 Assert.That(result != 0);
 Assert.AreNotEqual(0, result);
+Assert.That(result, Is.Not.EqualTo(0));
 
 // correct
-Assert.That(result, Is.Not.EqualTo(0));
+result.Should().NotBe(0);
 ```
 </details>
+
+## XUnit
+
+| Object     | Naming                                                       |
+|------------|--------------------------------------------------------------|
+| Test class | `SomeClassTests`                                             |
+| Test       | `SomeMethod_SomeStateAndArgs_SomeResult` (no `Async` suffix) |
+
+Each test class should be either abstract or sealed.
+
+Use Fluent Assertions.
 
 ## Microsoft.Extensions.DependencyInjection
 
