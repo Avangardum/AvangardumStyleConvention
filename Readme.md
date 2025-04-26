@@ -4,7 +4,7 @@ This is the convention for my personal projects, covering various aspects of dev
 
 ## Style convention versioning
 
-Current version: 11.0
+Current version: wip
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
 name, a used version, a link to a corresponding version branch of this repository and the full text of this convention, 
@@ -85,18 +85,18 @@ Classes that are not meant to be inherited from, but are meant to be instantiate
 
 Classes that are not meant to be instantiated, but are meant to be inherited from, should be abstract.
 
-Classes that are not meant to be neither instantiated, nor inherited from, should be static.
+Classes that are meant to be neither instantiated, nor inherited from, should be static.
 
-Inside a type constructor, when choosing between reading a parameter and reading a field, prefer reading a parameter.
+Inside a constructor, when choosing between reading a parameter and reading a field, prefer reading a parameter.
 
-When a type is instantiated using a parameterless constructor with property initializers, the parentheses should be
-omitted.
+When a type is instantiated using a parameterless constructor with property initializers, the parentheses
+should be omitted.
 
 If a nested type name conflicts with a property / field name, the nested type should be prefixed with `T`.
 
 ### Data transfer objects
 
-Data transfer objects (including event args) should be class records.
+Data transfer objects (including event args) should be records.
 
 If changing a DTO is not anticipated, it should have a primary constructor.
 
@@ -123,25 +123,9 @@ internal sealed record SomethingHappenedArgs
 
 Enums shouldn't have a `None` value. For the purpose of representing nothing use `null`.
 
-All enum constants shouldn't have an integer value explicitly specified.
+Enum constants shouldn't have an integer value explicitly specified.
 
-<details>
-<summary>Example</summary>
-
-```csharp
-// incorrect
-public enum Season { None = 0, Winter = 1, Spring = 2, Summer = 3, Autumn = 4 }
-
-// correct
-public enum Season 
-{ 
-    Winter, 
-    Spring, 
-    Summer, 
-    Autumn,
-}
-```
-</details>
+Don't use enum flags, use records with bool fields instead.
 
 ### Member declaration order
 
@@ -256,11 +240,9 @@ public class KillReporter()
 Do not use expression body declaration if it is more than one line long. Having a signature and an expression body on
 different lines is still acceptable.
 
-Do not mutate parameters unless they are `ref` or `out` (that includes primary constructor parameters).
+Do not mutate primary constructor arguments.
 
 Do not use the `delegate` keyword for declaring anonymous functions. Use lambda functions instead.
-
-Lambda function parameters should be named either as normal function parameters, or as abbreviations.
 
 <details>
 <summary>Example</summary>
@@ -277,14 +259,14 @@ private List<User> GetTargetUsers() => _users
 private List<User> GetTargetUsers()
 {
     return _users
-        .Where(u => u.IsVerified)
-        .Where(u => u.IsOnline)
+        .Where(x => x.IsVerified)
+        .Where(x => x.IsOnline)
         .ToList();
 }
 ```
 </details>
 
-Abstract methods' optional parameters should have their default value equal to null.
+Abstract methods' optional parameters should have their default value set to null.
 
 <details>
 <summary>Example</summary>
@@ -299,21 +281,22 @@ public abstract void LogIn(string? userName = null);
 // in a deriving class
 public override void LogIn(string? userName = null)
 {
-    var notNullUserName = userName ?? "admin";
+    userName ??= "admin";
 ```
 </details>
 
-If possible, return Task from a method instead of making the method async and awaiting the task.
+In `Task` returning functions, don't directly return a `Task` returned by another function. Instead await it and return
+its result.
 
 <details>
 <summary>Example</summary>
 
 ```csharp
 // incorrect
-async Task FooAsync() => await BarAsync();
+Task FooAsync() => BarAsync();
 
 // correct
-Task FooAsync() => BarAsync();
+async Task FooAsync() => await BarAsync();
 ```
 </details>
 
@@ -338,15 +321,16 @@ Use collection expressions where possible (`ImmutableList<int> a = [0, 1, 2];`).
 
 Use immutable collections (`ImmutableList`, `ImmutableHashSet`, etc.) where possible.
 
-Functions should both accept and return concrete collection types.
+Functions should both accept and return most abstract collection types, preferably `IEnumerable`.
 
 ### Formatting
 
 There should be no whitespace between a method name and its parameters.
 
-In a new expression there should be no whitespace between an object type and its constructor parameters.
+In a `new` expression there should be no whitespace between an object type and its constructor parameters.
+For target-typed `new`, a single whitespace should exist before `new` and parentheses.
 
-In a new expression there should be a single whitespace between constructor parameters and field initializers, or, in
+In a `new` expression there should be a single whitespace between constructor parameters and field initializers, or, in
 case if there are no constructor parameters, between an object type and field initializers.
 
 There should be a single whitespace between `do`, `while`, `if`, `using`, `fixed` and the following parentheses.
@@ -443,41 +427,16 @@ public int GetFoo(int n)
 
 When comparing a value with boundary values, all of the values should be sorted in ascending order from left to right.
 
-Use var where possible. (Unless you need to specify the collection type to use a collection expression, in such case
-prefer specifying the exact type and using a collection expression over using var and a collection initializer.)
+Use `var` only when the type is explicitly named on the right-hand side.
+
+Use target-typed `new` only when the type is explicitly named on the left-hand side.
+
+When choosing between `var` and target-typed `new`, prefer target-typed `new`.
 
 Use explicit privacy modifiers where possible. The exception are interface members, they should be implicitly public.
 
-<details>
-<summary>Example</summary>
-
-```csharp
-// incorrect
-void Foo(int value) // method
-{
-    bool isValid = value >= MinValue && value <= MaxValue;
-    if (!isValid) return;
-    Bar();
-}
-
-
-// correct
-private void Foo(int value) // method
-{
-    var isValid = MinValue <= value && value <= MaxValue;
-    if (!isValid) return;
-    Bar();
-}
-```
-</details>
-
-When using a switch statement or expression, if the default case is invalid,
-it should throw an ArgumentOutOfRangeException with no parameters.
-
 When calling `ToString` (whether explicitly or implicitly, using string interpolation or concatenation), which can
 accept a format string or culture info, such data should be passed explicitly.
-
-Prefer pattern matching (`is`) over equality comparison (`==`).
 
 Do not use the `file` access modifier.
 
@@ -540,8 +499,6 @@ Each test class should be either abstract or sealed.
 In sealed test classes, setup and teardown methods should be named `SetUp` and `TearDown`. In abstract fixtures, 
 their names should be prefixed with the class name, like `TestsBaseSetUp`.
 
-Use Fluent Assertions.
-
 When asserting that an object, inheriting from UnityEngine.Object, is null or not null, use 
 `UnityEngine.Assertions.Assert`.
 
@@ -570,12 +527,10 @@ result.Should().NotBe(0);
 
 Each test class should be either abstract or sealed.
 
-Use Fluent Assertions.
-
 ## Microsoft.Extensions.DependencyInjection
 
-For registering dependencies, use extension methods for IServiceCollection, each method containing a focused group of
-registrations, and returning IServiceCollection.
+For registering dependencies, use custom extension methods for IServiceCollection, each method containing a focused
+group of registrations, and returning IServiceCollection.
 
 Use method chaining for registrations.
 
@@ -601,7 +556,7 @@ public static class ServiceCollectionExtensions
     {
         return services
             .AddSingleton<IFoo, Foo>()
-            .AddSingleton<IBar, Bar>();
+            .AddSingleton<IBar, Bar>()
             ;
     }
     
@@ -609,7 +564,7 @@ public static class ServiceCollectionExtensions
     {
         return services
             .AddSingleton<IBaz, Baz>()
-            .AddSingleton<IQux, Qux>();
+            .AddSingleton<IQux, Qux>()
             ;
     }
 }
@@ -636,14 +591,10 @@ Indentation: 4 spaces.
 
 If there is no closing tag for a tag, it should be self-closing.
 
-There should be no leading or trailing whitespaces in tags.
+Inline self-closing tag should have a space before `/>`. 
 
-A tag should ether occupy one line with all its attributes, or have each attribute on a separate line.
-
-If each attribute is on a separate line, the first one should be on the same line as the tag, the others should have
-their first character at the same column as the first attribute.
-
-When choosing between writing a simple value inside a tag and using an attribute instead, use an attribute.
+A tag should either occupy one line with all its attributes, or have each attribute on a separate line, with tag name
+and closing angle bracket on its own line.
 
 Indentation: 4 spaces.
 
@@ -652,10 +603,12 @@ Indentation: 4 spaces.
 
 ```xaml
 <StackPanel Orientation="Horizontal">
-    <TextBlock Text="Lorem ipsum"
-               Background="DodgerBlue"
-               Width="150"
-               Height="30"/>
+    <TextBlock
+        Text="Lorem ipsum"
+        Background="DodgerBlue"
+        Width="150"
+        Height="30"
+    />
 </StackPanel>
 ```
 </details>
@@ -675,3 +628,5 @@ Correct: `JsonParser`
 In any text files, line width should be no more than 120 characters.
 
 In any text files, there should be no trailing whitespaces.
+
+Any file should end with an empty line.
