@@ -29,7 +29,7 @@ Any project specific rules should be written in this file.
 Version has the following format: major.minor[.patch]
 
 Major version is incremented when there are breaking changes (upgrading to a new version may require existing code
-changes)
+changes).
 
 Minor version is incremented when there are non-breaking changes.
 
@@ -244,61 +244,11 @@ Do not mutate primary constructor arguments.
 
 Do not use the `delegate` keyword for declaring anonymous functions. Use lambda functions instead.
 
-<details>
-<summary>Example</summary>
+Abstract methods' optional parameters should have their default value set to null. What value is actually used, if it
+is not specified, is an implementation detail and should be specified in an implementation.
 
-```csharp
-// incorrect
-private List<User> GetTargetUsers() => _users
-    .Where(delegate(User x) { return x.IsVerified; })
-    .Where(delegate(User x) { return x.IsOnline; })
-    .ToList();
-
-
-// correct
-private List<User> GetTargetUsers()
-{
-    return _users
-        .Where(x => x.IsVerified)
-        .Where(x => x.IsOnline)
-        .ToList();
-}
-```
-</details>
-
-Abstract methods' optional parameters should have their default value set to null.
-
-<details>
-<summary>Example</summary>
-
-```csharp
-// incorrect
-public abstract void LogIn(string userName = "admin");
-
-// correct
-public abstract void LogIn(string? userName = null);
-
-// in a deriving class
-public override void LogIn(string? userName = null)
-{
-    userName ??= "admin";
-```
-</details>
-
-In `Task` returning functions, don't directly return a `Task` returned by another function. Instead await it and return
+In `Task` returning functions, don't directly return a `Task` returned by another function. Instead, await it and return
 its result.
-
-<details>
-<summary>Example</summary>
-
-```csharp
-// incorrect
-Task FooAsync() => BarAsync();
-
-// correct
-async Task FooAsync() => await BarAsync();
-```
-</details>
 
 ### Interfaces
 
@@ -328,23 +278,25 @@ Functions should both accept and return most abstract collection types, preferab
 There should be no whitespace between a method name and its parameters.
 
 In a `new` expression there should be no whitespace between an object type and its constructor parameters.
-For target-typed `new`, a single whitespace should exist before `new` and parentheses.
+For target-typed `new`, a single whitespace should exist between `new` and parentheses.
 
 In a `new` expression there should be a single whitespace between constructor parameters and field initializers, or, in
 case if there are no constructor parameters, between an object type and field initializers.
 
-There should be a single whitespace between `do`, `while`, `if`, `using`, `fixed` and the following parentheses.
+There should be a single whitespace between `do`, `while`, `if`, `using`, `fixed` and following parentheses.
 
-If there is a block of code in parentheses, square brackets or curly braces, spanning multiple lines,
-it should be either be like a single line, but with line breaks preventing overflowing the line width limit or with 
-each element and opening/closing symbol on its own line.
+Using `if` or loops without curly braces is only allowed if the body is on the same line as `if` or loop operator
+(`if (value == null) return;`).
+
+If there is a block of code in parentheses, square brackets, angle brackets or curly braces, spanning multiple lines,
+each element and each parenthesis should be on its own line.
 
 Indentation: 4 spaces.
 
-Having a single newline between members of a type is always acceptable. However, it is possible to omit it if all of
+Having a single newline between members of a type is always acceptable. However, it is possible to omit it if all
 the following conditions are met:
 - Both members have the same member declaration order (for example, both are private non-static non-readonly fields).
-- Both members occupy only 1 line each (including comments and initializers).
+- Both members occupy only 1 line each (including comments, attributes, initializers).
 
 Don't use trailing commas.
 
@@ -366,66 +318,10 @@ There should be no whitespace between an unary operator and its operand.
 
 All cases of a switch statement should be wrapped in curly braces.
 
-<details>
-<summary>Example</summary>
-
-```csharp
-// incorrect
-private int _a;
-
-/// <summary>
-/// Lorem ipsum
-/// </summary>
-private int _b;
-private int[] _c = [
-    1,
-    2,]
-private int[] _d = [ 1,2, ];
-public int C {get;set;}
-
-public int SqrC => C * C;
-public int GetCPlus (int n) => C + n;
-
-public int GetCMinus (int n) => C - n;
-public int GetFoo (int n) {
-    if(n > 0) return _a;
-    else return _b;
-}
-
-
-// correct
-private int _a;
-
-/// <summary>
-/// Lorem ipsum
-/// </summary>
-private int _b;
-
-private int[] _c = 
-[
-    1,
-    2
-];
-
-private int[] _d = [1, 2];
-
-public int C { get; set; }
-public int SqrC => C * C;
-
-public int GetCPlus(int n) => C + n;
-public int GetCMinus(int n) => C - n;
-
-public int GetFoo(int n)
-{
-    if (n > 0) return _a;
-    else return _b;
-}
-```
-</details>
-
 ### Miscellaneous
 
-When comparing a value with boundary values, all of the values should be sorted in ascending order from left to right.
+When comparing a value with boundary values, all the values should be sorted in ascending order from left to right
+(`min <= value && value <= max`).
 
 Use `var` only when the type is explicitly named on the right-hand side.
 
@@ -471,21 +367,7 @@ If you need to have serializable enums that show in the inspector, do not use yo
 special serializable enums with the `Serializable` prefix, use them anywhere where you need serialization, and use the 
 business logic enums in your business logic, mapping them on the boundary. Unlike the business logic enums, the 
 serializable enums can have a `None` value, and their constants should have integer values explicitly specified, 
-starting from 0 with the default step of 1000 to allow inserting new values in between in the future.
-
-## Zenject
-
-| Object           | Naming            |
-|------------------|-------------------|
-| Binding ID       | `SomeBinding`     |
-| Injection Method | `SomeClassInject` |
-
-Injection methods priority (from most recommended to least recommended):
-- Injection using constructor
-- Injection using an injection method
-- Injection using injectable fields/properties
-
-A class should have no more than one injection method.
+starting from 1000 with the default step of 1000 to allow inserting new values in between in the future.
 
 ## NUnit
 
@@ -496,27 +378,8 @@ A class should have no more than one injection method.
 
 Each test class should be either abstract or sealed.
 
-In sealed test classes, setup and teardown methods should be named `SetUp` and `TearDown`. In abstract fixtures, 
+In sealed test classes, setup and teardown methods should be named `SetUp` and `TearDown`. In abstract test classes, 
 their names should be prefixed with the class name, like `TestsBaseSetUp`.
-
-When asserting that an object, inheriting from UnityEngine.Object, is null or not null, use 
-`UnityEngine.Assertions.Assert`.
-
-A test class should have no more than one setup and teardown methods.
-
-<details>
-<summary>Example</summary>
-
-```csharp
-// incorrect
-Assert.That(result != 0);
-Assert.AreNotEqual(0, result);
-Assert.That(result, Is.Not.EqualTo(0));
-
-// correct
-result.Should().NotBe(0);
-```
-</details>
 
 ## XUnit
 
@@ -526,50 +389,6 @@ result.Should().NotBe(0);
 | Test       | `SomeMethod_SomeStateAndArgs_SomeResult` (no `Async` suffix) |
 
 Each test class should be either abstract or sealed.
-
-## Microsoft.Extensions.DependencyInjection
-
-For registering dependencies, use custom extension methods for IServiceCollection, each method containing a focused
-group of registrations, and returning IServiceCollection.
-
-Use method chaining for registrations.
-
-Name the parameter of the extension method `services`.
-
-Have the `return services` and `;` at separate lines.
-
-<details>
-<summary>Example</summary>
-
-```csharp
-// Program.cs
-_host.ConfigureServices(services => {
-    services
-        .AddFooBar()
-        .AddBazQux()
-})
-    
-// ServiceCollectionExtensions.cs
-public static class ServiceCollectionExtensions
-{
-    public static IServiceCollection AddFooBar(this IServiceCollection services)
-    {
-        return services
-            .AddSingleton<IFoo, Foo>()
-            .AddSingleton<IBar, Bar>()
-            ;
-    }
-    
-    public static IServiceCollection AddBazQux(this IServiceCollection services)
-    {
-        return services
-            .AddSingleton<IBaz, Baz>()
-            .AddSingleton<IQux, Qux>()
-            ;
-    }
-}
-```
-</details>
 
 ## Git
 
@@ -598,35 +417,12 @@ and closing angle bracket on its own line.
 
 Indentation: 4 spaces.
 
-<details>
-<summary>Example</summary>
-
-```xaml
-<StackPanel Orientation="Horizontal">
-    <TextBlock
-        Text="Lorem ipsum"
-        Background="DodgerBlue"
-        Width="150"
-        Height="30"
-    />
-</StackPanel>
-```
-</details>
-
 ## Miscellaneous
 
-When applying naming rules, abbreviations should be treated like single words.
+When applying naming rules, abbreviations should be treated like single words (`JsonParser`, not `JSONParser`).
 
-<details>
-<summary>Example</summary>
-
-Incorrect: `JSONParser`
-
-Correct: `JsonParser`
-</details>
-
-In any text files, line width should be no more than 120 characters.
+In any text files, line width should be no longer than 120 characters.
 
 In any text files, there should be no trailing whitespaces.
 
-Any file should end with an empty line.
+All files should end with an empty line.
