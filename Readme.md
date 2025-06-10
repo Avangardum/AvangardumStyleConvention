@@ -68,6 +68,10 @@ Comments should be written using `//`, not `/* */`.
 
 If `//` is not in the beginning of a line, it should also be preceded by a whitespace.
 
+Use XML comments to describe the public interface of a type.
+
+Use `<inheritdoc />` wherever possible to make it obvious that there is documentation available.
+
 ### Namespaces
 
 Namespaces should start with `DeveloperName.RepositoryName`.
