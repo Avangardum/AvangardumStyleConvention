@@ -1,10 +1,8 @@
 # Avangardum's style convention
 
-This is the convention for my personal projects, covering various aspects of development.
-
 ## Style convention versioning
 
-Current version: wip
+Current version: 12.0
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
 name, a used version, a link to a corresponding version branch of this repository and the full text of this convention, 
@@ -38,6 +36,7 @@ Patch version is incremented when there are fixes that don't change the essence 
 ## C#
 
 ### Naming
+
 | Object                                     | Naming               |
 |--------------------------------------------|----------------------|
 | Namespace                                  | `SomeNamespace`      |
@@ -50,7 +49,8 @@ Patch version is incremented when there are fixes that don't change the essence 
 | Property                                   | `SomeProperty`       |
 | Function that doesn't return Task          | `SomeFunction`       |
 | Function that returns Task                 | `SomeFunctionAsync`  |
-| Function parameter                         | `someParameter`      |
+| Record primary constructor parameter       | `SomeParameter`      |
+| Other parameter                            | `someParameter`      |
 | Local variable                             | `someVariable`       |
 | Local constant                             | `someConstant`       |
 | Region                                     | `SomeRegion`         |
@@ -70,8 +70,7 @@ If `//` is not in the beginning of a line, it should also be preceded by a white
 
 ### Namespaces
 
-Root namespace for a project should follow the following pattern: *Developer/Company*.*Project* 
-(examples: `Avangardum.TwilightRun`, `Hyperbox.DroneTanksArena`).
+Namespaces should start with `DeveloperName.RepositoryName`.
 
 Use file-scoped namespaces.
 
@@ -98,26 +97,8 @@ If a nested type name conflicts with a property / field name, the nested type sh
 
 Data transfer objects (including event args) should be records.
 
-If changing a DTO is not anticipated, it should have a primary constructor.
-
-If changing a DTO is anticipated, it should have a default constructor, and all of its properties should be
+DTOs should have a parameterless constructor, and all of its properties should be
 declared in the DTO body with `{ get; init; }` accessors.
-
-<details>
-<summary>Example</summary>
-
-```csharp
-// FooBar is a pair of Foo and Bar, it will not change.
-internal sealed record FooBar(Foo Foo, Bar Bar);
-
-// Event args can change in the future.
-internal sealed record SomethingHappenedArgs
-{
-    public required Foo Foo { get; init; }
-    public Bar? Bar { get; init; }
-}
-```
-</details>
 
 ### Enums
 
@@ -127,113 +108,22 @@ Enum constants shouldn't have an integer value explicitly specified.
 
 Don't use enum flags, use records with bool fields instead.
 
-### Member declaration order
+### Delegates, events
 
-- Nested types
-- Constants and static readonly fields
-- Fields
-- Constructors
-- Destructors
-- Events
-- Properties
-- Indexers
-- Methods
+Prefer using `Action` or `Func` delegate types, avoid `Predicate`, `EventArgs` or custom delegate types.
 
-Within each of these groups order by access:
+Event argument types should follow one of the following patterns: *event* + Args (`UpdatingArgs`),
+*sender* + *event* + Args (example: `DataSourceUpdatingArgs`).
 
-- public
-- protected internal
-- internal
-- protected
-- private protected
-- private
+Event handler method names should follow one of the following patterns: On + *event* (`OnUpdating`), 
+On + *sender* + *event* (`OnDataSourceUpdating`).
 
-Within each of the access groups, order by static, then non-static:
-
-- static
-- non-static
-
-Within each of the static/non-static groups of fields, order by readonly, then non-readonly:
-
-- readonly
-- non-readonly
-
-### Events
-
-Events should use the `EventHandler` delegate. If there are no arguments to pass, `EventArgs.Empty` should be passed. 
-If there are arguments to pass, the generic version of `EventHandler` should be used and arguments should be passed 
-in an event arguments object.
-
-Event argument types should follow one of the following patterns: *event* + Args (example: `DyingArgs`),
-*sender* + *event* + Args (example: `CharacterDyingArgs`).
-
-Event handler method names should follow one of the following patterns: On + *event* (example: `OnDying`), 
-On + *sender* + *event* (example: `OnCharacterDying`).
-
-Event handler methods should have 2 parameters: `sender` and `e`.
-
-Events should not be initialized with an empty delegate.
-
-Events should be invoked using the `Invoke` method.
-
-Events should be invoked using the `?.` operator.
+Events should not be nullable, they should be initialized with an empty lambda.
 
 Events that are invoked before something happens should be named as verbs in present continuous 
-(example: `CharacterDying`).
+(`DataSourceUpdating`).
 
-Events that are invoked after something happens should be named as verbs in past simple. (example: `CharacterDied`).
-
-<details>
-<summary>Example</summary>
-
-```csharp
-// incorrect
-public class Character
-{
-    public event Action<Character, Character> Death = delegate {};
-
-    public string Name { get; set; }
-    
-    private void Die(Charater killer)
-    {
-        Death(this, killer);
-    }
-}
-
-public class KillReporter()
-{
-    private void OnKill(Character victim, Character killer)
-    {
-        _gameLogger.Write($"{killer.Name} killed {victim.Name}");
-    }
-}
-
-
-// correct
-public class Character
-{
-    public record DiedEventArgs(Character killer);
-
-    public event EventHandler<DiedEventArgs>? Died;
-
-    public string Name { get; set; }
-    
-    private void Die(Character killer)
-    {
-        Died?.Invoke(this, new DiedEventArgs(killer));
-    }
-}
-
-public class KillReporter()
-{
-    private void OnCharacterDied(object sender, Character.DiedEventArgs e)
-    {
-        var victim = (Character)sender;
-        _gameLogger.Write($"{e.killer.Name} killed {victim.Name}");
-    }
-}
-```
-</details>
+Events that are invoked after something happens should be named as verbs in past simple. (`DataSourceUpdated`).
 
 ### Functions, properties, indexers
 
@@ -242,7 +132,7 @@ different lines is still acceptable.
 
 Do not mutate primary constructor arguments.
 
-Do not use the `delegate` keyword for declaring anonymous functions. Use lambda functions instead.
+Do not use the `delegate` keyword for declaring anonymous functions. Use lambdas instead.
 
 Abstract methods' optional parameters should have their default value set to null. What value is actually used, if it
 is not specified, is an implementation detail and should be specified in an implementation.
@@ -250,38 +140,24 @@ is not specified, is an implementation detail and should be specified in an impl
 In `Task` returning functions, don't directly return a `Task` returned by another function. Instead, await it and return
 its result.
 
-### Interfaces
-
-Standard names for interfaces:
-
-| Interface purpose                                                                         | Naming                           |
-|-------------------------------------------------------------------------------------------|----------------------------------|
-| Creates something                                                                         | ISomethingFactory                |
-| Gets something (not necessarily creating it)                                              | ISomethingGetter                 |
-| Sets something                                                                            | ISomethingSetter                 |
-| Gets or sets something                                                                    | ISomethingGetterSetter           |
-| Notifies about something (with an event, or otherwise)                                    | ISomethingPublisher              |
-| Maps some one thing to some another thing (both can be named with a shared name)          | ISomethingMapper                 |
-| Maps one thing to another item (both can not be named with a shared name)                 | IOneThingToAnotherItemMapper     |
-| Maps one thing to another item (both can not be named with a shared name) bidirectionally | IOneThingToFromAnotherItemMapper |
-
 ### Collections
 
 Use collection expressions where possible (`ImmutableList<int> a = [0, 1, 2];`).
 
 Use immutable collections (`ImmutableList`, `ImmutableHashSet`, etc.) where possible.
 
-Functions should both accept and return most abstract collection types, preferably `IEnumerable`.
+Functions should both accept and return interfaces of a specific collection type (`IReadOnlyList`, `IDictionary`),
+preferentially read only versions.
 
 ### Formatting
 
 There should be no whitespace between a method name and its parameters.
 
 In a `new` expression there should be no whitespace between an object type and its constructor parameters.
-For target-typed `new`, a single whitespace should exist between `new` and parentheses.
+For target-typed `new`, a single whitespace should exist between `new` and parentheses (`new Foo()`).
 
 In a `new` expression there should be a single whitespace between constructor parameters and field initializers, or, in
-case if there are no constructor parameters, between an object type and field initializers.
+case if there are no constructor parameters, between an object type and field initializers. (`new Foo { Value = 1 }`)
 
 There should be a single whitespace between `do`, `while`, `if`, `using`, `fixed` and following parentheses.
 
@@ -289,19 +165,17 @@ Using `if` or loops without curly braces is only allowed if the body is on the s
 (`if (value == null) return;`).
 
 If there is a block of code in parentheses, square brackets, angle brackets or curly braces, spanning multiple lines,
-each element and each parenthesis should be on its own line.
+each element and each opening / closing symbol should be on its own line.
 
 Indentation: 4 spaces.
 
-Having a single newline between members of a type is always acceptable. However, it is possible to omit it if all
-the following conditions are met:
-- Both members have the same member declaration order (for example, both are private non-static non-readonly fields).
-- Both members occupy only 1 line each (including comments, attributes, initializers).
+Having a single newline between members of a type is always acceptable. However, it is possible to omit it if
+both members occupy only 1 line each (including comments, attributes, initializers).
 
 Don't use trailing commas.
 
-When having a comma-separated list of elements, each comma should be followed by a whitespace or a newline.
-The same applies to a semicolon-separated list of elements.
+When having a comma-separated or semicolon-separated list of elements, each comma should be followed by a whitespace
+or a newline.
 
 When doing a line break on an operator, the operator should be at the end of a line, not at the beginning.
 The exceptions are the `.`, `?.`, `!.` operators, which should be at the beginning of a line.
@@ -314,7 +188,7 @@ the content.
 
 There should be a whitespace or a newline between a binary/ternary operator and its operands (except `.`, `?.`, `!.`).
 
-There should be no whitespace between an unary operator and its operand.
+There should be no whitespace between a unary operator and its operand.
 
 All cases of a switch statement should be wrapped in curly braces.
 
@@ -349,7 +223,8 @@ Use modifiers in the following order (modifiers on the same line are mutually ex
 - `extern`, `unsafe`, `async`, `const`, `readonly`, `volatile`
 - `partial`
 
-Do not use the `Predicate` type, instead use `Func`.
+Do not sort type members by any formal properties (accessibility, type(property, method...)), instead prefer locality,
+placing members that use each other nearby, such as placing a method declaration after a method that calls it.
 
 ## Files
 
