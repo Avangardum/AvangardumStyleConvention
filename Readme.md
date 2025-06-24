@@ -2,7 +2,7 @@
 
 ## Style convention versioning
 
-Current version: 12.0
+Current version: 12.1
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
 name, a used version, a link to a corresponding version branch of this repository and the full text of this convention, 
@@ -106,18 +106,16 @@ declared in the DTO body with `{ get; init; }` accessors.
 
 ### Enums
 
-Enums shouldn't have a `None` value. For the purpose of representing nothing use `null`.
+Non-flag enums shouldn't have a `None` value. For the purpose of representing nothing use `null`.
 
-Enum constants shouldn't have an integer value explicitly specified.
-
-Don't use enum flags, use records with bool fields instead.
+Non-flag enum constants shouldn't have an integer value explicitly specified.
 
 ### Delegates, events
 
 Prefer using `Action` or `Func` delegate types, avoid `Predicate`, `EventArgs` or custom delegate types.
 
 Event argument types should follow one of the following patterns: *event* + Args (`UpdatingArgs`),
-*sender* + *event* + Args (example: `DataSourceUpdatingArgs`).
+*sender* + *event* + Args (`DataSourceUpdatingArgs`).
 
 Event handler method names should follow one of the following patterns: On + *event* (`OnUpdating`), 
 On + *sender* + *event* (`OnDataSourceUpdating`).
