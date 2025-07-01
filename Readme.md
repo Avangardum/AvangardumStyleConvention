@@ -2,11 +2,11 @@
 
 ## Style convention versioning
 
-Current version: 12.1
+Current version: 13.0
 
 Each project using this convention should have a file named StyleConvention.md in its root directory, containing the
-name, a used version, a link to a corresponding version branch of this repository and the full text of this convention, 
-like this:
+name, a used version, a link to a corresponding version branch of this repository and the text of this convention, 
+omitting irrelevant sections while leaving a notice that they are omitted, like this:
 
 ```markdown
 This project uses Avangardum's style convention v1.0
@@ -17,7 +17,7 @@ https://github.com/Avangardum/AvangardumStyleConvention/tree/version/1.0
 
 local rules
 
-# Avangardum's style convention v1.0
+# Avangardum's style convention v1.0 (irrelevant sections omitted)
 
 this convention
 ```
@@ -97,13 +97,6 @@ should be omitted.
 
 If a nested type name conflicts with a property / field name, the nested type should be prefixed with `T`.
 
-### Data transfer objects
-
-Data transfer objects (including event args) should be records.
-
-DTOs should have a parameterless constructor, and all of its properties should be
-declared in the DTO body with `{ get; init; }` accessors.
-
 ### Enums
 
 Non-flag enums shouldn't have a `None` value. For the purpose of representing nothing use `null`.
@@ -112,7 +105,7 @@ Non-flag enum constants shouldn't have an integer value explicitly specified.
 
 ### Delegates, events
 
-Prefer using `Action` or `Func` delegate types, avoid `Predicate`, `EventArgs` or custom delegate types.
+Prefer using `Action` or `Func` delegate types, avoid `Predicate`, `EventArgs`.
 
 Event argument types should follow one of the following patterns: *event* + Args (`UpdatingArgs`),
 *sender* + *event* + Args (`DataSourceUpdatingArgs`).
@@ -296,9 +289,10 @@ Indentation: 4 spaces.
 
 ## Miscellaneous
 
-When applying naming rules, abbreviations should be treated like single words (`JsonParser`, not `JSONParser`).
+Abbreviations with 2 characters should be fully capitalized (`IOStream`), longer abbreviations follow same naming rules
+as if they were regular words (`JsonParser`).
 
-In any text files, line width should be no longer than 120 characters.
+Whenever possible, format code to avoid line width exceeding 120 symbols.
 
 In any text files, there should be no trailing whitespaces.
 
